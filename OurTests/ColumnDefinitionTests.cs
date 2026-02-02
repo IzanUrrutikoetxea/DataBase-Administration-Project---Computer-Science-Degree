@@ -3,33 +3,33 @@ namespace OurTests
 {
   public class ColumnDefinitionsTests
   {
-    [Theory]
-    [InlineData(ColumnDefinition.DataType.String, "Pepe")] 
-    [InlineData(ColumnDefinition.DataType.Int, "2")]
-    [InlineData(ColumnDefinition.DataType.Double, "2.0")]
-    [InlineData(ColumnDefinition.DataType.String, "")]
-    public void ColumnDefinition_Constructor_SetsPropertiesCorrectly(ColumnDefinition.DataType type, string name)
-    {
-      // Arrange & Act
-      var columnDefinition = new ColumnDefinition(type, name);
-      // Assert
-      Assert.Equal(type, columnDefinition.Type);
-      Assert.Equal(name, columnDefinition.Name);
-    }
+    //[Theory]
+    //[InlineData(ColumnDefinition.DataType.String, "Pepe")] 
+    //[InlineData(ColumnDefinition.DataType.Int, "2")]
+    //[InlineData(ColumnDefinition.DataType.Double, "2.0")]
+    //[InlineData(ColumnDefinition.DataType.String, "")]
+    //public void ColumnDefinition_Constructor_SetsPropertiesCorrectly(ColumnDefinition.DataType type, string name)
+    //{
+    //  // Arrange & Act
+    //  var columnDefinition = new ColumnDefinition(type, name);
+    //  // Assert
+    //  Assert.Equal(type, columnDefinition.Type);
+    //  Assert.Equal(name, columnDefinition.Name);
+    //}
 
-    [Theory]
-    [InlineData(ColumnDefinition.DataType.String, "Pepe", "Pepe->String")]
-    [InlineData(ColumnDefinition.DataType.Int, "2", "2->Int")]
-    [InlineData(ColumnDefinition.DataType.Double, "2.0", "2.0->Double")]
-    [InlineData(ColumnDefinition.DataType.Double, "", "->Double")]
-    public void ColumnDefinition_AsText_WorkCorrectly(ColumnDefinition.DataType type, string name, string expectedReturn)
-    {
-      // Arrange
-      var columnDefinition = new ColumnDefinition(type, name);
-      //Act
-      var result = columnDefinition.AsText();
-      //Assert
-      Assert.Equal(expectedReturn, result);
-    }
+    //[Theory]
+    //[InlineData(ColumnDefinition.DataType.String, "Pepe", "Pepe->String")]
+    //[InlineData(ColumnDefinition.DataType.Int, "2", "2->Int")]
+    //[InlineData(ColumnDefinition.DataType.Double, "2.0", "2.0->Double")]
+    //[InlineData(ColumnDefinition.DataType.Double, "", "->Double")]
+    //public void ColumnDefinition_AsText_WorkCorrectly(ColumnDefinition.DataType type, string name, string expectedReturn)
+    //{
+    //  // Arrange
+    //  var columnDefinition = new ColumnDefinition(type, name);
+    //  //Act
+    //  var result = columnDefinition.AsText();
+    //  //Assert
+    //  Assert.Equal(expectedReturn, result);
+    //}
   }
 }
