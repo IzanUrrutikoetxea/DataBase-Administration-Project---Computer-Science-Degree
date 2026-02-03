@@ -15,12 +15,13 @@ namespace DbManager
 
         public Row(List<ColumnDefinition> columnDefinitions, List<string> values)
         {
-            //TODO DEADLINE 1.A: Initialize member variables
-
-            
+          if (columnDefinitions.Count != values.Count) { throw new ArgumentException("Column definitions count must match values count."); }
+          if (columnDefinitions.Count == 0 || values.Count == 0) { throw new ArgumentException("Row needs at least 1 ColumnDefinition."); }
+          ColumnDefinitions = columnDefinitions;
+          Values = values;
         }
 
-        public void SetValue(string columnName, string value)
+    public void SetValue(string columnName, string value)
         {
             //TODO DEADLINE 1.A: Given a column name and value, change the value in that column
 

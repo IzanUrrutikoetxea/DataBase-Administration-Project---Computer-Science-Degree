@@ -19,6 +19,7 @@ namespace OurTests
     [Fact]
     public void ColumnDefinition_Constructor_ShouldThrow_WhenNameIsEmpty()
     {
+      //Arrange & Act & Assert
       Assert.Throws<ArgumentException>(() =>
           new ColumnDefinition(ColumnDefinition.DataType.String, "")
       );
@@ -26,6 +27,7 @@ namespace OurTests
     [Fact]
     public void ColumnDefinition_Constructor_ShouldThrow_WhenNameIsNull()
     {
+      //Arrange & Act & Assert
       Assert.Throws<ArgumentException>(() =>
           new ColumnDefinition(ColumnDefinition.DataType.String, null)
       );
