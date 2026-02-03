@@ -67,5 +67,40 @@ namespace OurTests
       );
     }
     #endregion
+
+    #region Row SetValue Tests
+    [Fact]
+    public void Row_SetValue_ShouldUpdateValue_ForGivenColumnName()
+    {
+      //Arrange
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+      List<string> values = new List<string> { "Mikel", "30" };
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+      //Act
+      row.SetValue("Age", "31");
+      //Assert
+      Assert.Equal("31", row.Values[1]);
+    }
+    [Fact]
+    public void Row_SetValue_ShouldThrowException_WhenColumnNameDoesNotExist()
+    {
+      //Arrange
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+      List<string> values = new List<string> { "Mikel", "30" };
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() =>
+          row.SetValue("Height", "180")
+      );
+    }
+    #endregion
   }
 }

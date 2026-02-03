@@ -19,13 +19,21 @@ namespace DbManager
           if (columnDefinitions.Count == 0 || values.Count == 0) { throw new ArgumentException("Row needs at least 1 ColumnDefinition."); }
           ColumnDefinitions = columnDefinitions;
           Values = values;
+          //PREGUNTAR AL PROFESOR SI DEBERIA TENER EN CUENTA AQUI EL HECHO DE QUE UNA FILA TENGO 2 COLUMNAS CON EL MISMO NOMBRE
         }
 
-    public void SetValue(string columnName, string value)
+        public void SetValue(string columnName, string value)
         {
-            //TODO DEADLINE 1.A: Given a column name and value, change the value in that column
-
-            
+          foreach (ColumnDefinition colDef in ColumnDefinitions)
+          {
+            if (colDef.Name == columnName)
+            {
+              int index = ColumnDefinitions.IndexOf(colDef);
+              Values[index] = value;
+              return;
+            }
+          }
+          throw new ArgumentException("There is none column with the given name: " + columnName);
         }
 
         public string GetValue(string columnName)
