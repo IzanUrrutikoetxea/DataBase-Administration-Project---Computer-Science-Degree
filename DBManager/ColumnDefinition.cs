@@ -14,10 +14,12 @@ namespace DbManager
 
         public ColumnDefinition(DataType type, string name)
         {
-            //TODO DEADLINE 1.A: Initialize member variables
-            
+          if (!string.IsNullOrEmpty(name))
+          {
+              Type = type;
+              Name = name;
+          }
         }
-
         private const string Delimiter = "->";
         private const string DelimiterEncoded = "[ARROW]";
 
