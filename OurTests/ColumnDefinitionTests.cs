@@ -4,14 +4,6 @@ namespace OurTests
   public class ColumnDefinitionsTests
   {
     #region ColumDefinition Constructor Tests
-    [Fact]
-    public void ColumnDefinition_Constructor_ShouldNotInitializeAttributesWhenNameIsNull()
-    {
-      // Arrange & Act
-      var columnDefinition = new ColumnDefinition(ColumnDefinition.DataType.String, null);
-      // Assert
-      Assert.NotEqual(ColumnDefinition.DataType.String, columnDefinition.Type);
-    }
     [Theory]
     [InlineData(ColumnDefinition.DataType.String, "Name")]
     [InlineData(ColumnDefinition.DataType.Double, "Mark")]
@@ -25,12 +17,18 @@ namespace OurTests
       Assert.Equal(name, columnDefinition.Name);
     }
     [Fact]
-    public void ColumnDefinition_Constructor_ShouldNotInitializeAttributesWhenNameIsEmpty()
+    public void ColumnDefinition_Constructor_ShouldThrow_WhenNameIsEmpty()
     {
-      // Arrange & Act
-      var columnDefinition = new ColumnDefinition(ColumnDefinition.DataType.String, "");
-      // Assert
-      Assert.NotEqual(ColumnDefinition.DataType.String, columnDefinition.Type);
+      Assert.Throws<ArgumentException>(() =>
+          new ColumnDefinition(ColumnDefinition.DataType.String, "")
+      );
+    }
+    [Fact]
+    public void ColumnDefinition_Constructor_ShouldThrow_WhenNameIsNull()
+    {
+      Assert.Throws<ArgumentException>(() =>
+          new ColumnDefinition(ColumnDefinition.DataType.String, null)
+      );
     }
     #endregion
   }

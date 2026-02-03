@@ -14,11 +14,12 @@ namespace DbManager
 
         public ColumnDefinition(DataType type, string name)
         {
-          if (!string.IsNullOrEmpty(name))
+          if (string.IsNullOrEmpty(name))
           {
-              Type = type;
-              Name = name;
+            throw new ArgumentException("Column name cannot be null or empty", nameof(name));
           }
+          Type = type;
+          Name = name;
         }
         private const string Delimiter = "->";
         private const string DelimiterEncoded = "[ARROW]";
