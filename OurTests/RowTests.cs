@@ -102,5 +102,40 @@ namespace OurTests
       );
     }
     #endregion
+
+    #region Row GetValue Tests
+    [Fact]
+    public void Row_GetValue_ShouldReturnValue_ForGivenColumnName()
+    {
+      //Arrange
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+      List<string> values = new List<string> { "Mikel", "30" };
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+      //Act
+      string ageValue = row.GetValue("Age");
+      //Assert
+      Assert.Equal("30", ageValue);
+    }
+    [Fact]
+    public void Row_GetValue_ShouldThrowException_WhenColumnNameDoesNotExist()
+    {
+      //Arrange
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+      List<string> values = new List<string> { "Mikel", "30" };
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() =>
+          row.GetValue("Height")
+      );
+    }
+    #endregion
   }
 }

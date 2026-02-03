@@ -38,12 +38,17 @@ namespace DbManager
 
         public string GetValue(string columnName)
         {
-            //TODO DEADLINE 1.A: Given a column name, return the value in that column
+          foreach (ColumnDefinition colDef in ColumnDefinitions)
+          {
+            if (colDef.Name == columnName)
+            {
+              int index = ColumnDefinitions.IndexOf(colDef);
+              return Values[index];
+            }
+          }
+          throw new ArgumentException("There is none column with the given name: " + columnName);
 
-            
-            return null;
-            
-        }
+    }
 
         public bool IsTrue(Condition condition)
         {
