@@ -13,10 +13,32 @@ namespace DbManager
 
         public Table(string name, List<ColumnDefinition> columns)
         {
-            //TODO DEADLINE 1.A: Initialize member variables
-            
+          if (string.IsNullOrEmpty(name)) { throw new ArgumentException("The table name can't be empty or null"); }
+          if (columns.Count == 0) { throw new ArgumentException("A table need at least one column"); }
+          if (HasDuplicatedColumnNames(columns)) { throw new ArgumentException("A table can't have duplicated column names"); }
+          Name = name;
+          ColumnDefinitions = columns;
         }
-
+        
+        public bool HasDuplicatedColumnNames(List<ColumnDefinition> columns)
+        {
+          foreach (var colDef in columns)
+          {
+            int count = 0;
+            foreach (var colDef2 in columns)
+            {
+              if (colDef.Name == colDef2.Name)
+              {
+                count++;
+              }
+            }
+            if (count > 1)
+            {
+              return true;
+            }
+          }
+          return false;
+        }
         public Row GetRow(int i)
         {
             //TODO DEADLINE 1.A: Return the i-th row
@@ -35,7 +57,7 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return the number of rows
             
-            return 0;
+            return Rows.Count;
             
         }
 
@@ -43,7 +65,7 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return the i-th column
             
-            return null;
+            return ColumnDefinitions[i];
             
         }
 
@@ -51,7 +73,7 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return the number of columns
             
-            return 0;
+            return ColumnDefinitions.Count;
             
         }
         
