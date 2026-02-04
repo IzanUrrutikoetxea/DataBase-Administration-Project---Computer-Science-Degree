@@ -1,7 +1,7 @@
 namespace OurTests
 {
-    public class TableTests
-    {
+  public class TableTests
+  {
     #region Table Constructor Tests
     [Fact]
     public void Table_Constructor_ShouldInitializeMemberVariables()
@@ -119,6 +119,171 @@ namespace OurTests
       bool hasDuplicates = table.HasDuplicatedColumnNames(columnDefinitions);
       //Assert
       Assert.False(hasDuplicates);
+    }
+    #endregion
+
+    #region Table GetRow Tests
+    [Fact]
+    public void Table_GetRow_ShouldReturnTheCorrectRow()
+    {
+      //Arrange
+      string tableName = "People";
+
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      List<string> rowValues1 = new List<string> { "Mikel", "30" };
+      List<string> rowValues2 = new List<string> { "Ane", "25" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, rowValues1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, rowValues2);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+
+      //Act
+      DbManager.Row retrievedRow1 = table.GetRow(0);
+      DbManager.Row retrievedRow2 = table.GetRow(1);
+
+      //Assert
+      Assert.Equal(row1, retrievedRow1);
+      Assert.Equal(row2, retrievedRow2);
+    }
+    [Fact]
+    public void Table_GetRow_ShouldThrowException_WhenIndexIsOutOfRange()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+      
+      List<string> rowValues = new List<string> { "Mikel", "30" };
+      
+      DbManager.Row row = new DbManager.Row(columnDefinitions, rowValues);
+      
+      table.AddRow(row);
+     
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() => table.GetRow(-1));
+      Assert.Throws<ArgumentException>(() => table.GetRow(1));
+    }
+    #endregion
+
+    #region Table AddRow Tests
+    [Fact]
+    public void Table_AddRow_ShouldAddRowToTable()
+    {
+      //Arrange
+      string tableName = "People";
+
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      List<string> rowValues1 = new List<string> { "Mikel", "30" };
+      List<string> rowValues2 = new List<string> { "Ane", "25" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, rowValues1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, rowValues2);
+
+      //Act
+      table.AddRow(row1);
+      table.AddRow(row2);
+
+      //Assert
+      Assert.Equal(row1, table.GetRow(0));
+      Assert.Equal(row2, table.GetRow(1));
+    }
+    [Fact]
+    public void Table_AddRow_ShouldThrowException_WhenRowColumnCountDoesNotMatch()
+    {
+      //Arrange
+      string tableName = "People";
+
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      List<string> rowValues = new List<string> { "Mikel" }; 
+
+      DbManager.Row row = new DbManager.Row(columnDefinitions.Take(1).ToList(), rowValues);
+
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() => table.AddRow(row));
+    }
+    [Fact]
+    public void Table_AddRow_ShouldThrowException_WhenRowColumnDefinitiosDoNotMatch()
+    {       
+      //Arrange
+      string tableName = "People";
+
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      List<DbManager.ColumnDefinition> differentColumnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "FullName")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Years"))
+      };
+
+      List<string> rowValues = new List<string> { "Mikel", "30" };
+      DbManager.Row row = new DbManager.Row(differentColumnDefinitions, rowValues);
+
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() => table.AddRow(row));
+    }
+    #endregion
+
+    #region Table NumRows Tests
+    [Fact]
+    public void Table_NumRows_ShouldReturnTheCorrectNumberOfRows()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      List<string> rowValues1 = new List<string> { "Mikel", "30" };
+      List<string> rowValues2 = new List<string> { "Ane", "25" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, rowValues1);
+
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, rowValues2);
+
+      //Act & Assert
+      Assert.Equal(0, table.NumRows());
+      table.AddRow(row1);
+      Assert.Equal(1, table.NumRows());
+      table.AddRow(row2);
+      Assert.Equal(2, table.NumRows());
     }
     #endregion
   }

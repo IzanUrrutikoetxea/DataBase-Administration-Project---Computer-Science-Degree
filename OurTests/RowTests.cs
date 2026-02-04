@@ -137,5 +137,28 @@ namespace OurTests
       );
     }
     #endregion
+
+    #region Row GetColumnDefinition Tests
+    [Fact]
+    public void Row_GetColumnDefinition_ShouldReturnColumnDefinitions()
+    {
+      //Arrange
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      List<string> values = new List<string> { "Mikel", "30" };
+
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+
+      //Act
+      List<DbManager.ColumnDefinition> result = row.GetColumnDefinition();
+
+      //Assert
+      Assert.Equal(columnDefinitions, result);
+    }
+    #endregion
   }
 }

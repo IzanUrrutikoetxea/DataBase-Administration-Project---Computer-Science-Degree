@@ -1,6 +1,7 @@
-using DbManager.Parser;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using DbManager.Parser;
 
 namespace DbManager
 {
@@ -41,24 +42,20 @@ namespace DbManager
         }
         public Row GetRow(int i)
         {
-            //TODO DEADLINE 1.A: Return the i-th row
-            
-            return null;
-            
+          if (i < 0 || i >= Rows.Count) { throw new ArgumentException("You can't get a row that is out of the limits of the table"); }
+          return Rows[i];
         }
 
         public void AddRow(Row row)
         {
-            //TODO DEADLINE 1.A: Add a new row
-            
+          if (row.Values.Count != ColumnDefinitions.Count) { throw new ArgumentException("The number of values in the row must match the number of columns in the table"); }
+          if (row.GetColumnDefinition() != ColumnDefinitions) { throw new ArgumentException("The column definitions of the row must match the column definitions of the table"); }
+          Rows.Add(row);
         }
 
         public int NumRows()
         {
-            //TODO DEADLINE 1.A: Return the number of rows
-            
-            return Rows.Count;
-            
+            return Rows.Count; 
         }
 
         public ColumnDefinition GetColumn(int i)
