@@ -286,5 +286,65 @@ namespace OurTests
       Assert.Equal(2, table.NumRows());
     }
     #endregion
+
+    #region Table GetColumn Tests
+    [Fact]
+    public void Table_GetColumn_ShouldReturnTheCorrectColumn()
+    {
+      //Arrange
+      string tableName = "People";
+
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act
+      DbManager.ColumnDefinition column1 = table.GetColumn(0);
+      DbManager.ColumnDefinition column2 = table.GetColumn(1);
+
+      //Assert
+      Assert.Equal(column1, columnDefinitions[0]);
+      Assert.Equal(column2, columnDefinitions[1]);
+    }
+    [Fact]
+    public void Table_GetColumn_ShouldThrowException_WhenIndexIsOutOfRange()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() => table.GetColumn(-1));
+      Assert.Throws<ArgumentException>(() => table.GetColumn(1));
+    }
+    #endregion
+
+    #region Table NumRows Tests
+    [Fact]
+    public void Table_NumColumns_ShouldReturnTheCorrectNumberOfColumns()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act & Assert
+      Assert.Equal(2, table.NumColumns());
+    }
+    #endregion
   }
 }

@@ -60,18 +60,13 @@ namespace DbManager
 
         public ColumnDefinition GetColumn(int i)
         {
-            //TODO DEADLINE 1.A: Return the i-th column
-            
-            return ColumnDefinitions[i];
-            
+          if (i < 0 || i >= ColumnDefinitions.Count) { throw new ArgumentException("You can't get a column that is out of the limits of the table"); }
+          return ColumnDefinitions[i];
         }
 
         public int NumColumns()
         {
-            //TODO DEADLINE 1.A: Return the number of columns
-            
             return ColumnDefinitions.Count;
-            
         }
         
         public ColumnDefinition ColumnByName(string column)
