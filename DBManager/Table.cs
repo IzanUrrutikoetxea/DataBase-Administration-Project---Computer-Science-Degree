@@ -71,10 +71,9 @@ namespace DbManager
         
         public ColumnDefinition ColumnByName(string column)
         {
-            //TODO DEADLINE 1.A: Return the number of columns
-            
-            return null;
-            
+            if (string.IsNullOrEmpty(column)) { throw new ArgumentException("The column name can't be empty or null"); }
+            if (!ColumnDefinitions.Exists(colDef => colDef.Name == column)) { throw new ArgumentException("The column name does not exist in the table"); }
+            return ColumnDefinitions.Find(colDef => colDef.Name == column);
         }
         public int ColumnIndexByName(string columnName)
         {

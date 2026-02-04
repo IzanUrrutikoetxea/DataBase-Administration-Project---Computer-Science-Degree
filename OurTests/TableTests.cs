@@ -346,5 +346,60 @@ namespace OurTests
       Assert.Equal(2, table.NumColumns());
     }
     #endregion
+
+    #region Table ColumnByName Tests
+    [Fact]
+    public void Table_ColumnByName_ShouldReturnTheCorrectColumnDefinition()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act
+      DbManager.ColumnDefinition nameColumn = table.ColumnByName("Name");
+      DbManager.ColumnDefinition ageColumn = table.ColumnByName("Age");
+
+      //Assert
+      Assert.Equal(columnDefinitions[0], nameColumn);
+      Assert.Equal(columnDefinitions[1], ageColumn);
+    }
+    [Fact]
+    public void Table_ColumnByName_ShouldThrowException_WhenColumnNameDoesNotExist()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() => table.ColumnByName("Height"));
+    }
+    [Fact]
+    public void Table_ColumnByName_ShouldThrowException_WhenColumnNameIsEmptyOrNull()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act & Assert
+      Assert.Throws<ArgumentException>(() => table.ColumnByName(""));
+      Assert.Throws<ArgumentException>(() => table.ColumnByName(null));
+    }
+    #endregion
   }
 }
