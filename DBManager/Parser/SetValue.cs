@@ -5,16 +5,18 @@ using System.Text.RegularExpressions;
 
 namespace DbManager.Parser
 {
-    public class SetValue
+  public class SetValue
+  {
+    public string ColumnName { get; private set; }
+    public string Value { get; private set; }
+
+
+    public SetValue(string column, string value)
     {
-        public string ColumnName { get; private set; }
-        public string Value { get; private set; }
+      //TODO DEADLINE 1A: Initialize member variables
+      ColumnName = column;
+      Value = value;
 
-
-        public SetValue(string column, string value)
-        {
-            //TODO DEADLINE 1A: Initialize member variables
-            
-        }
     }
+  }
 }
