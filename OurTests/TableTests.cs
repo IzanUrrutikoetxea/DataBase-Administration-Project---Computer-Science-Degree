@@ -401,5 +401,66 @@ namespace OurTests
       Assert.Throws<ArgumentException>(() => table.ColumnByName(null));
     }
     #endregion
+
+    #region Tabler ColumnIndexByName Tests
+      [Fact]
+      public void Table_ColumnIndexByName_ShouldReturnTheCorrectColumnIndex()
+      {
+        //Arrange
+        string tableName = "People";
+
+        List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+        {
+          (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+          (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+        };
+
+        DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+        //Act
+        int nameColumnIndex = table.ColumnIndexByName("Name");
+        int ageColumnIndex = table.ColumnIndexByName("Age");
+
+        //Assert
+        Assert.Equal(0, nameColumnIndex);
+        Assert.Equal(1, ageColumnIndex);
+      }
+      [Fact]
+      public void Table_ColumnIndexByName_ShouldThrowException_WhenColumnNameDoesNotExist()
+      {
+        //Arrange
+        string tableName = "People";
+
+        List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+        {
+          (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+          (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+        };
+
+        DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+        //Act & Assert
+        Assert.Throws<ArgumentException>(() => table.ColumnIndexByName("Height"));
+      }
+
+      [Fact]
+      public void Table_ColumnIndexByName_ShouldThrowException_WhenColumnNameIsEmptyOrNull()
+      {
+        //Arrange
+        string tableName = "People";
+
+        List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+          {
+            (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+            (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
+          };
+
+        DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+        //Act & Assert
+        Assert.Throws<ArgumentException>(() => table.ColumnIndexByName(""));
+        Assert.Throws<ArgumentException>(() => table.ColumnIndexByName(null));
+      }
+    #endregion
   }
 }

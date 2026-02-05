@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Xml.Linq;
 using DbManager.Parser;
 
@@ -77,30 +78,61 @@ namespace DbManager
         }
         public int ColumnIndexByName(string columnName)
         {
-            //TODO DEADLINE 1.A: Return the zero-based index of the column named columnName
-            
-            return -1;
-            
+          if (string.IsNullOrEmpty(columnName)) { throw new ArgumentException("The column name can't be empty or null"); }
+          if (!ColumnDefinitions.Exists(colDef => colDef.Name == columnName)) { throw new ArgumentException("The column name does not exist in the table"); }
+          return ColumnDefinitions.FindIndex(colDef => colDef.Name == columnName);
         }
 
 
         public override string ToString()
         {
-            //TODO DEADLINE 1.A: Return the table as a string. The format is specified in the documentation
-            //Valid examples:
-            //"['Name']{'Adolfo'}{'Jacinto'}" <- one column, two rows
-            //"['Name','Age']{'Adolfo','23'}{'Jacinto','24'}" <- two columns, two rows
-            //"" <- no columns, no rows
-            //"['Name']" <- one column, no rows
-            
-            return null;
-            
+          //TODO DEADLINE 1.A: Return the table as a string. The format is specified in the documentation
+          //Valid examples:
+          //"['Name']{'Adolfo'}{'Jacinto'}" <- one column, two rows
+          //"['Name','Age']{'Adolfo','23'}{'Jacinto','24'}" <- two columns, two rows
+          //"" <- no columns, no rows
+          //"['Name']" <- one column, no rows
+
+          string result = "";
+          if (ColumnDefinitions.Count == 0)
+          {
+             return result;
+          }
+          result += "[";
+          foreach (ColumnDefinition column in ColumnDefinitions)
+          {
+            result += $"'{column.Name}',";
+          }
+          result += "]";
+          if (Rows.Count == 0)
+          {
+            return result;
+          }
+          foreach(Row row in Rows)
+          {
+            result += "{";
+            foreach (string value in row.Values)
+            {
+              result += $"'{value}',";
+            }
+            result += "}";
+          }
+          return result;
         }
 
-        public void DeleteIthRow(int row)
+        public void DeleteIthRow(int rowIndex)
         {
-            //TODO DEADLINE 1.A: Delete the i-th row. If there is no i-th row, do nothing
-            
+          //TODO DEADLINE 1.A: Delete the i-th row. If there is no i-th row, do nothing
+          Row row = GetRow(rowIndex);
+          List<Row> newRows = new List<Row>();
+          foreach (Row r in Rows)
+          {
+            if (r != row)
+            {
+              newRows.Add(r);
+            }
+          }
+          Rows = newRows;
         }
 
         private List<int> RowIndicesWhereConditionIsTrue(Condition condition)
