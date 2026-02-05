@@ -135,28 +135,81 @@ namespace DbManager
           Rows = newRows;
         }
 
-        private List<int> RowIndicesWhereConditionIsTrue(Condition condition)
+      private List<int> RowIndicesWhereConditionIsTrue(Condition condition)
+      {
+        //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
+        List<int> indexes = new List<int>();
+        foreach (Row row in Rows)
         {
-            //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
-            
-            return null;
-            
+          if (row.IsTrue(condition))
+          {
+            indexes.Add(Rows.IndexOf(row));
+          }
         }
+        return indexes;
+      }
 
         public void DeleteWhere(Condition condition)
         {
             //TODO DEADLINE 1.A: Delete all rows where the condition is true. Check RowIndicesWhereConditionIsTrue()
-            
+            foreach (int index in RowIndicesWhereConditionIsTrue(condition))
+            {
+              DeleteIthRow(index);
+          }
         }
 
-        public Table Select(List<string> columnNames, Condition condition)
+    public Table Select(List<string> columnNames, Condition condition)
+    {
+      //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
+      //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
+      Table newTable;
+      List<int> columnIndexes = new List<int>();
+      List<Row> newRows = new List<Row>();
+      List<ColumnDefinition> newColumnDefinitions = new List<ColumnDefinition>();
+
+      foreach (string columnName in columnNames)
+      {
+        newColumnDefinitions.Add(ColumnByName(columnName));
+        columnIndexes.Add(ColumnIndexByName(columnName));
+      }
+      if (condition == null)
+      {
+        foreach (Row row in Rows)
         {
-            //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
-            //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
-            
-            return null;
-            
+          List<string> newValues = new List<string>();
+          foreach (int columnIndex in columnIndexes)
+          {
+            newValues.Add(row.Values[columnIndex]);
+          }
+          newRows.Add(new Row(newColumnDefinitions, newValues));
         }
+        newTable = new Table("Result", newColumnDefinitions);
+        foreach (Row row in newRows)
+        {
+          newTable.AddRow(row);
+        }
+        return newTable;
+      }
+
+      foreach (Row row in Rows)
+      {
+        if (row.IsTrue(condition))
+        {
+          List<string> newValues = new List<string>();
+          foreach (int columnIndex in columnIndexes)
+          {
+            newValues.Add(row.Values[columnIndex]);
+          }
+          newRows.Add(new Row(newColumnDefinitions, newValues));
+        }
+      }
+      newTable = new Table("Result", newColumnDefinitions);
+      foreach (Row row in newRows)
+      {
+        newTable.AddRow(row);
+      }
+      return newTable;
+    }
 
         public bool Insert(List<string> values)
         {
