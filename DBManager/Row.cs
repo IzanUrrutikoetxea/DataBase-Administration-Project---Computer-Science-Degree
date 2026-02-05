@@ -54,15 +54,21 @@ namespace DbManager
           return ColumnDefinitions;
         }
 
-        public bool IsTrue(Condition condition)
+    public bool IsTrue(Condition condition)
+    {
+      //TODO DEADLINE 1.A: Given a condition (column name, operator and literal value, return whether it is true or not
+      //for this row. Check Condition.IsTrue method
+      foreach (ColumnDefinition column in ColumnDefinitions)
+      {
+        if (column.Name == condition.ColumnName)
         {
-            //TODO DEADLINE 1.A: Given a condition (column name, operator and literal value, return whether it is true or not
-            //for this row. Check Condition.IsTrue method
-
-            
-            return false;
-            
+          int index = ColumnDefinitions.IndexOf(column);
+          string value = Values[index];
+          return condition.IsTrue(value, column.Type);
         }
+      }
+      return false;    
+    }
 
         private const string Delimiter = ":";
         private const string DelimiterEncoded = "[SEPARATOR]";
