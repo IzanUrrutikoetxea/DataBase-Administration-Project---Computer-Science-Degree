@@ -1,4 +1,5 @@
 using System.Reflection.Metadata;
+using DbManager;
 
 namespace OurTests
 {
@@ -283,6 +284,74 @@ namespace OurTests
 
       //Assert
       Assert.Null(database.TableByName("TestTable"));
+    }
+    #endregion
+
+    #region Insert Tests
+    [Fact]
+    public void Database_Insert_ShouldReturnFalse_WhenTheTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var values = new List<string>() { "Pepe", "137.21", "11" };
+
+      //Act
+      var result = database.Insert("Pepe", values);
+
+      //Assert
+      Assert.False(result);
+    }
+    [Fact]
+    public void Database_Insert_ShouldSetLastMessageCorrecty_WhenTheTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var values = new List<string>() { "Pepe", "137.21", "11" };
+
+      //Act
+      var result = database.Insert("Pepe", values);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.TableDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_Insert_ShouldReturnTrue_WhenTheTableDoesExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var values = new List<string>() { "Pepe", "137.21", "11" };
+
+      //Act
+      var result = database.Insert("TestTable", values);
+
+      //Assert
+      Assert.True(result);
+    }
+    [Fact]
+    public void Database_Insert_ShouldSetLastMessageCorrecty_WhenTheTableDoesExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var values = new List<string>() { "Pepe", "137.21", "11" };
+
+      //Act
+      var result = database.Insert("TestTable", values);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.InsertSuccess, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_Insert_ShouldInsertRowCorrectly_WhenTheTableDoesExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var values = new List<string>() { "Pepe", "137.21", "11" };
+
+      //Act
+      var result = database.Insert("TestTable", values);
+
+      //Assert
+      Assert.Equal(4, database.TableByName("TestTable").NumRows());
     }
     #endregion
   }
