@@ -222,5 +222,68 @@ namespace OurTests
       Assert.Equal(table.ToString(), tableResult.ToString());
     }
     #endregion
+
+    #region DropTable Tests
+    [Fact]
+    public void Database_DropTable_ShouldReturnFalse_WhenTableDoesNotExst()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+
+      //Act
+      var result = database.DropTable("Pepe");
+
+      //Assert
+      Assert.False(result);
+    }
+    [Fact]
+    public void Database_DropTable_ShouldSetCorrectLastMessage_WhenTableDoesNotExst()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+
+      //Act
+      var result = database.DropTable("Pepe");
+
+      //Assert
+      Assert.Equal(DbManager.Constants.TableDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_DropTable_ShouldReturnTrue_WhenTableDoesExst()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+
+      //Act
+      var result = database.DropTable("TestTable");
+
+      //Assert
+      Assert.True(result);
+    }
+    [Fact]
+    public void Database_DropTable_ShouldSetCorrectLastMessage_WhenTableDoesExst()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+
+      //Act
+      var result = database.DropTable("TestTable");
+
+      //Assert
+      Assert.Equal(DbManager.Constants.DropTableSuccess, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_DropTable_ShouldCorrectlyDropTable_WhenTableDoesExst()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+
+      //Act
+      var result = database.DropTable("TestTable");
+
+      //Assert
+      Assert.Null(database.TableByName("TestTable"));
+    }
+    #endregion
   }
 }
