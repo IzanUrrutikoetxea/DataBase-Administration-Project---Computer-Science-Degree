@@ -32,7 +32,5 @@ namespace DbManager
         public const string PrivilegeDoesNotExistError = Error + "Privilege does not exist";
         public const string ProfileAlreadyHasPrivilege = Error + "Profile already has privilege";
         public const string UsersProfileIsNotGrantedRequiredPrivilege = Error + "The security profile of the user does not have the required privilege to perform the operation";
-
-        
     }
 }
