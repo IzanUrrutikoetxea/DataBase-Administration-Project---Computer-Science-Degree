@@ -202,7 +202,7 @@ namespace OurTests
       Assert.Equal(row2, table.GetRow(1));
     }
     [Fact]
-    public void Table_AddRow_ShouldThrowException_WhenRowColumnCountDoesNotMatch()
+    public void Table_AddRow_ShouldDoNothing_WhenRowColumnCountDoesNotMatch()
     {
       //Arrange
       string tableName = "People";
@@ -219,11 +219,14 @@ namespace OurTests
 
       DbManager.Row row = new DbManager.Row(columnDefinitions.Take(1).ToList(), rowValues);
 
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() => table.AddRow(row));
+      //Act
+      table.AddRow(row);
+
+      //Assert
+      Assert.Equal(0, table.NumRows());
     }
     [Fact]
-    public void Table_AddRow_ShouldThrowException_WhenRowColumnDefinitiosDoNotMatch()
+    public void Table_AddRow_ShouldDoNothing_WhenRowColumnDefinitiosDoNotMatch()
     {       
       //Arrange
       string tableName = "People";
@@ -245,8 +248,11 @@ namespace OurTests
       List<string> rowValues = new List<string> { "Mikel", "30" };
       DbManager.Row row = new DbManager.Row(differentColumnDefinitions, rowValues);
 
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() => table.AddRow(row));
+      //Act
+      table.AddRow(row);
+
+      //Assert
+      Assert.Equal(0, table.NumRows());
     }
     #endregion
 

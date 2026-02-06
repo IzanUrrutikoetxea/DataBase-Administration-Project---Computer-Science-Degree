@@ -48,8 +48,8 @@ namespace DbManager
 
         public void AddRow(Row row)
         {
-          if (row.Values.Count != ColumnDefinitions.Count) { throw new ArgumentException("The number of values in the row must match the number of columns in the table"); }
-          if (row.GetColumnDefinition() != ColumnDefinitions) { throw new ArgumentException("The column definitions of the row must match the column definitions of the table"); }
+          if (row.Values.Count != ColumnDefinitions.Count) { return; }
+          if (row.GetColumnDefinition() != ColumnDefinitions) { return; }
           Rows.Add(row);
         }
 
