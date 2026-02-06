@@ -14,10 +14,7 @@ namespace DbManager
 
         public ColumnDefinition(DataType type, string name)
         {
-          if (string.IsNullOrEmpty(name))
-          {
-            throw new ArgumentException("Column name cannot be null or empty", nameof(name));
-          }
+          if (string.IsNullOrEmpty(name)) { return; }
           Type = type;
           Name = name;
         }

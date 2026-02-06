@@ -17,20 +17,22 @@ namespace OurTests
       Assert.Equal(name, columnDefinition.Name);
     }
     [Fact]
-    public void ColumnDefinition_Constructor_ShouldThrow_WhenNameIsEmpty()
+    public void ColumnDefinition_Constructor_ShouldDoNothing_WhenNameIsEmpty()
     {
-      //Arrange & Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new ColumnDefinition(ColumnDefinition.DataType.String, "")
-      );
+      //Act
+      var columnDefinition = new ColumnDefinition(ColumnDefinition.DataType.String, string.Empty);
+
+      //Assert
+      Assert.Null(columnDefinition.Name);
     }
     [Fact]
-    public void ColumnDefinition_Constructor_ShouldThrow_WhenNameIsNull()
+    public void ColumnDefinition_Constructor_ShouldDoNothing_WhenNameIsNull()
     {
-      //Arrange & Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new ColumnDefinition(ColumnDefinition.DataType.String, null)
-      );
+      //Act
+      var columnDefinition = new ColumnDefinition(ColumnDefinition.DataType.String, null);
+
+      //Assert
+      Assert.Null(columnDefinition.Name);
     }
     #endregion
   }
