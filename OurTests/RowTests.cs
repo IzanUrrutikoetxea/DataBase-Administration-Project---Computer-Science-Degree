@@ -99,7 +99,7 @@ namespace OurTests
       Assert.Equal("30", ageValue);
     }
     [Fact]
-    public void Row_GetValue_ShouldThrowException_WhenColumnNameDoesNotExist()
+    public void Row_GetValue_ShouldReturnNull_WhenColumnNameDoesNotExist()
     {
       //Arrange
       List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
@@ -109,10 +109,12 @@ namespace OurTests
       };
       List<string> values = new List<string> { "Mikel", "30" };
       DbManager.Row row = new DbManager.Row(columnDefinitions, values);
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          row.GetValue("Height")
-      );
+
+      //Act
+      string heightValue = row.GetValue("Height");
+
+      //Assert
+      Assert.Null(heightValue);
     }
     #endregion
 

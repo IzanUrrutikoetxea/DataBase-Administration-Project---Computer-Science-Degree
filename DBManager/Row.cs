@@ -43,7 +43,7 @@ namespace DbManager
           return Values[index];
         }
       }
-      throw new ArgumentException("There is none column with the given name: " + columnName);
+      return null;
     }
 
     public List<ColumnDefinition> GetColumnDefinition()
