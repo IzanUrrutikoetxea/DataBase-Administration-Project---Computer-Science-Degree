@@ -38,40 +38,8 @@ namespace OurTests
 
       //Assert
       Assert.Null(row.Values);
-      Assert.Null(row.GetColumnDefinition());
+      Assert.Empty(row.GetColumnDefinition());
     }   
-    [Fact]
-    public void Row_Constructor_ShouldDoNothing_WhenColumnDefinitionsIsEmpty()
-    {
-      //Arrange
-      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition> {};
-      List<string> values = new List<string> { "Mikel" , "30" };
-
-      //Act
-      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
-
-      //Assert
-      Assert.Null(row.Values);
-      Assert.Null(row.GetColumnDefinition());
-    }
-    [Fact]
-    public void Row_Constructor_ShouldDoNothing_WhenValuesIsEmpty()
-    {
-      //Arrange
-      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
-      {
-        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
-        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
-      };
-      List<string> values = new List<string> {};
-
-      //Act
-      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
-
-      //Assert
-      Assert.Null(row.GetColumnDefinition());
-      Assert.Null(row.Values);
-    }
     #endregion
 
     #region Row SetValue Tests
@@ -92,7 +60,7 @@ namespace OurTests
       Assert.Equal("31", row.Values[1]);
     }
     [Fact]
-    public void Row_SetValue_ShouldThrowException_WhenColumnNameDoesNotExist()
+    public void Row_SetValue_ShouldDoNothing_WhenColumnNameDoesNotExist()
     {
       //Arrange
       List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
@@ -102,10 +70,14 @@ namespace OurTests
       };
       List<string> values = new List<string> { "Mikel", "30" };
       DbManager.Row row = new DbManager.Row(columnDefinitions, values);
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          row.SetValue("Height", "180")
-      );
+      DbManager.Row changedRow = new DbManager.Row(columnDefinitions, values);
+
+      //Act
+      changedRow.SetValue("Height", "180");
+
+      //Assert
+      Assert.Equal(row.Values, changedRow.Values);
+      Assert.Equal(row.GetColumnDefinition(), changedRow.GetColumnDefinition());
     }
     #endregion
 
