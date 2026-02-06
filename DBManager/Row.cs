@@ -10,16 +10,15 @@ namespace DbManager
 {
     public class Row
     {
-        private List<ColumnDefinition> ColumnDefinitions = new List<ColumnDefinition>();
+        private List<ColumnDefinition> ColumnDefinitions;
         public List<string> Values { get; set; }
 
         public Row(List<ColumnDefinition> columnDefinitions, List<string> values)
         {
-          if (columnDefinitions.Count != values.Count) { throw new ArgumentException("Column definitions count must match values count."); }
-          if (columnDefinitions.Count == 0 || values.Count == 0) { throw new ArgumentException("Row needs at least 1 ColumnDefinition."); }
+          if (columnDefinitions.Count != values.Count) { return; }
+          if (columnDefinitions.Count == 0 || values.Count == 0) { return; }
           ColumnDefinitions = columnDefinitions;
           Values = values;
-          //PREGUNTAR AL PROFESOR SI DEBERIA TENER EN CUENTA AQUI EL HECHO DE QUE UNA FILA TENGO 2 COLUMNAS CON EL MISMO NOMBRE
         }
 
         public void SetValue(string columnName, string value)

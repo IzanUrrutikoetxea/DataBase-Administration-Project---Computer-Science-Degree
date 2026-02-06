@@ -23,7 +23,7 @@ namespace OurTests
       Assert.Equal(values, row.Values);
     }
     [Fact]
-    public void Row_Constructor_ShouldThrowException_WhenColumnDefinitionsAndValuesCountMismatch()
+    public void Row_Constructor_ShouldDoNothing_WhenColumnDefinitionsAndValuesCountMismatch()
     {
       //Arrange
       List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
@@ -33,25 +33,29 @@ namespace OurTests
       };
       List<string> values = new List<string> { "Mikel"};
 
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new Row(columnDefinitions, values)
-      );
+      //Act
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+
+      //Assert
+      Assert.Null(row.Values);
+      Assert.Null(row.GetColumnDefinition());
     }   
     [Fact]
-    public void Row_Constructor_ShouldThrowException_WhenColumnDefinitionsIsEmpty()
+    public void Row_Constructor_ShouldDoNothing_WhenColumnDefinitionsIsEmpty()
     {
       //Arrange
       List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition> {};
       List<string> values = new List<string> { "Mikel" , "30" };
 
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new Row(columnDefinitions, values)
-      );
+      //Act
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+
+      //Assert
+      Assert.Null(row.Values);
+      Assert.Null(row.GetColumnDefinition());
     }
     [Fact]
-    public void Row_Constructor_ShouldThrowException_WhenValuesIsEmpty()
+    public void Row_Constructor_ShouldDoNothing_WhenValuesIsEmpty()
     {
       //Arrange
       List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
@@ -61,10 +65,12 @@ namespace OurTests
       };
       List<string> values = new List<string> {};
 
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new Row(columnDefinitions, values)
-      );
+      //Act
+      DbManager.Row row = new DbManager.Row(columnDefinitions, values);
+
+      //Assert
+      Assert.Null(row.GetColumnDefinition());
+      Assert.Null(row.Values);
     }
     #endregion
 
