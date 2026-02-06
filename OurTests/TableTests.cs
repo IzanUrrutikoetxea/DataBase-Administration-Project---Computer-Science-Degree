@@ -25,7 +25,7 @@ namespace OurTests
       }
     }
     [Fact]
-    public void Table_Constructor_ShouldThrowException_WhenTableNameIsEmpty()
+    public void Table_Constructor_ShouldDoNothing_WhenTableNameIsEmpty()
     {
       //Arrange
       string tableName = "";
@@ -34,13 +34,15 @@ namespace OurTests
         (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
         (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
       };
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new DbManager.Table(tableName, columnDefinitions)
-      );
+
+      //Act
+      var table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Assert
+      Assert.Null(table.Name);
     }
     [Fact]
-    public void Table_Constructor_ShouldThrowException_WhenTableNameIsNull()
+    public void Table_Constructor_ShouldDoNothing_WhenTableNameIsNull()
     {
       //Arrange
       string? tableName = null;
@@ -49,24 +51,14 @@ namespace OurTests
         (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
         (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
       };
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new DbManager.Table(tableName, columnDefinitions)
-      );
+      //Act
+      var table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Assert
+      Assert.Null(table.Name);
     }
     [Fact]
-    public void Table_Constructor_ShouldThrowException_WhenColumnDefinitionsIsEmpty()
-    {
-      //Arrange
-      string tableName = "People";
-      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition> { };
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new DbManager.Table(tableName, columnDefinitions)
-      );
-    }
-    [Fact]
-    public void Table_Constructor_ShouldThrowException_WhenColumnDefinitionsHasDuplicateNames()
+    public void Table_Constructor_ShouldDoNothing_WhenColumnDefinitionsHasDuplicateNames()
     {
       //Arrange
       string tableName = "People";
@@ -75,10 +67,11 @@ namespace OurTests
         (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
         (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Name"))
       };
-      //Act & Assert
-      Assert.Throws<ArgumentException>(() =>
-          new DbManager.Table(tableName, columnDefinitions)
-      );
+      //Act
+      var table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Assert
+      Assert.Null(table.Name);
     }
     #endregion
 

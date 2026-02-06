@@ -15,9 +15,8 @@ namespace DbManager
 
         public Table(string name, List<ColumnDefinition> columns)
         {
-          if (string.IsNullOrEmpty(name)) { throw new ArgumentException("The table name can't be empty or null"); }
-          if (columns.Count == 0) { throw new ArgumentException("A table need at least one column"); }
-          if (HasDuplicatedColumnNames(columns)) { throw new ArgumentException("A table can't have duplicated column names"); }
+          if (string.IsNullOrEmpty(name)) { return; }
+          if (HasDuplicatedColumnNames(columns)) { return; }
           Name = name;
           ColumnDefinitions = columns;
         }
