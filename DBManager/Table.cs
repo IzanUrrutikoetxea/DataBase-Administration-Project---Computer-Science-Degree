@@ -211,22 +211,33 @@ namespace DbManager
       return newTable;
     }
 
-        public bool Insert(List<string> values)
-        {
-            //TODO DEADLINE 1.A: Insert a new row with the values given. If the number of values is not correct, return false. True otherwise
-            
-            return false;
-            
-        }
+    public bool Insert(List<string> values)
+    {
+      //TODO DEADLINE 1.A: Insert a new row with the values given. If the number of values is not correct, return false. True otherwise
+      if (values.Count != ColumnDefinitions.Count) return false;
+      Row newRow = new Row(ColumnDefinitions, values);
+      AddRow(newRow);
+      return true;
+    }
 
-        public bool Update(List<SetValue> setValues, Condition condition)
+    public bool Update(List<SetValue> setValues, Condition condition)
+    {
+      //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
+      //return false, otherwise return true
+      
+      if (condition == null) return false;
+      List<int> rowIndexes = RowIndicesWhereConditionIsTrue(condition);
+      foreach (int rowIndex in rowIndexes)
+      {
+        Row row = GetRow(rowIndex);
+        foreach (SetValue setValue in setValues)
         {
-            //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
-            //return false, otherwise return true
-            
-            return false;
-            
+          int columnIndex = ColumnIndexByName(setValue.ColumnName);
+          row.Values[columnIndex] = setValue.Value;
         }
+      }
+      return true;
+    }
 
 
 

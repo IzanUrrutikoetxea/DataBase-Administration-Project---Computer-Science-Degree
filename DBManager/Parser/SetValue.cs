@@ -16,7 +16,6 @@ namespace DbManager.Parser
       //TODO DEADLINE 1A: Initialize member variables
       ColumnName = column;
       Value = value;
-
     }
   }
 }
