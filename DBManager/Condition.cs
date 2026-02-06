@@ -16,9 +16,9 @@ namespace DbManager
     public Condition(string column, string op, string literalValue)
     {
       //TODO DEADLINE 1A: Initialize member variables
-      if (string.IsNullOrEmpty(column)) { throw new ArgumentException("Column name cannot be null or empty.", nameof(column)); }
-      if (string.IsNullOrEmpty(op)) { throw new ArgumentException("Operator cannot be null or empty.", nameof(column)); }
-      if (string.IsNullOrEmpty(literalValue)) { throw new ArgumentException("Value cannot be null or empty.", nameof(column)); }
+      if (string.IsNullOrEmpty(column)) { return; }
+      if (string.IsNullOrEmpty(op)) { return; }
+      if (string.IsNullOrEmpty(literalValue)) { return; }
         ColumnName = column;
         Operator = op;
         LiteralValue = literalValue;
