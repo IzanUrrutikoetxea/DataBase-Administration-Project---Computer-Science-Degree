@@ -143,7 +143,7 @@ namespace DbManager
           Rows = newRows;
         }
 
-      private List<int> RowIndicesWhereConditionIsTrue(Condition condition)
+      public List<int> RowIndicesWhereConditionIsTrue(Condition condition)
       {
         //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
         List<int> indexes = new List<int>();
