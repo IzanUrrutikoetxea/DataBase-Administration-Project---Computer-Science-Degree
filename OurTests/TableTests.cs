@@ -843,5 +843,156 @@ namespace OurTests
       Assert.Equal(expectedTable.ToString(), resultTable.ToString());
     }
     #endregion
+
+    #region Insert Tests
+    [Fact]
+    public void Table_Insert_ShouldReturnTrue_WhenTheNumberOfValuesIsValid()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Double, "Height"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "30", "Paco", "183.22" };
+      List<string> valuesRow2 = new List<string> { "22", "Miren", "165.08" };
+      List<string> valuesRow3 = new List<string> { "56", "Pedro", "188.57" };
+      List<string> valuesRow4 = new List<string> { "14", "Paco", "154.77" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+      DbManager.Row row3 = new DbManager.Row(columnDefinitions, valuesRow3);
+      DbManager.Row row4 = new DbManager.Row(columnDefinitions, valuesRow4);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+      table.AddRow(row3);
+      table.AddRow(row4);
+
+      List<string> insertValues = new List<string> { "8", "Irene", "84.92" };
+      var expectedResult = true;
+
+      //Act & Assert
+      Assert.Equal(expectedResult, table.Insert(insertValues));
+    }
+    [Fact]
+    public void Table_Insert_ShouldReturnFalse_WhenTheNumberOfValuesIsInvalid()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Double, "Height"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "30", "Paco", "183.22" };
+      List<string> valuesRow2 = new List<string> { "22", "Miren", "165.08" };
+      List<string> valuesRow3 = new List<string> { "56", "Pedro", "188.57" };
+      List<string> valuesRow4 = new List<string> { "14", "Paco", "154.77" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+      DbManager.Row row3 = new DbManager.Row(columnDefinitions, valuesRow3);
+      DbManager.Row row4 = new DbManager.Row(columnDefinitions, valuesRow4);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+      table.AddRow(row3);
+      table.AddRow(row4);
+
+      List<string> insertValues = new List<string> {"Irene", "84.92" };
+      var expectedResult = false;
+
+      //Act & Assert
+      Assert.Equal(expectedResult, table.Insert(insertValues));
+    }
+    [Fact]
+    public void Table_Insert_ShouldInsertRow_WhenTheNumberOfValuesIsValid()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Double, "Height"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "30", "Paco", "183.22" };
+      List<string> valuesRow2 = new List<string> { "22", "Miren", "165.08" };
+      List<string> valuesRow3 = new List<string> { "56", "Pedro", "188.57" };
+      List<string> valuesRow4 = new List<string> { "14", "Paco", "154.77" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+      DbManager.Row row3 = new DbManager.Row(columnDefinitions, valuesRow3);
+      DbManager.Row row4 = new DbManager.Row(columnDefinitions, valuesRow4);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+      table.AddRow(row3);
+      table.AddRow(row4);
+
+      List<string> insertValues = new List<string> { "8", "Irene", "84.92" };
+
+      var expectedResult = new DbManager.Row(columnDefinitions, insertValues);
+
+      //Act
+      var act = table.Insert(insertValues);
+
+      //Assert
+      Assert.Equal(expectedResult.Values, table.GetRow(4).Values);
+    }
+    [Fact]
+    public void Table_Insert_ShouldNotInsertRow_WhenTheNumberOfValuesIsInvalid()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Double, "Height"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "30", "Paco", "183.22" };
+      List<string> valuesRow2 = new List<string> { "22", "Miren", "165.08" };
+      List<string> valuesRow3 = new List<string> { "56", "Pedro", "188.57" };
+      List<string> valuesRow4 = new List<string> { "14", "Paco", "154.77" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+      DbManager.Row row3 = new DbManager.Row(columnDefinitions, valuesRow3);
+      DbManager.Row row4 = new DbManager.Row(columnDefinitions, valuesRow4);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+      table.AddRow(row3);
+      table.AddRow(row4);
+
+      List<string> insertValues = new List<string> {"Irene", "84.92" };
+
+      var expectedResult = new DbManager.Row(columnDefinitions, insertValues);
+
+      //Act
+      var act = table.Insert(insertValues);
+
+      //Assert
+      Assert.Equal(4, table.NumRows());
+    }
+    #endregion
   }
 }
