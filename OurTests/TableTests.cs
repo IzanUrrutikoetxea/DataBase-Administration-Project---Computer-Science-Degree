@@ -557,5 +557,67 @@ namespace OurTests
       Assert.Equal(expectedResult, tableString);
     }
     #endregion
+
+    #region DeleteIthRow Tests
+    [Fact]
+    public void Table_DeleteIthRow_ShouldDeleteRow_WhenIndexIsValid()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "Adolfo" };
+      List<string> valuesRow2 = new List<string> { "Jacinto" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+
+      //Act
+      table.DeleteIthRow(1);
+
+      //Assert
+      Assert.Equal(1, table.NumRows());
+      Assert.Equal(row1.Values, table.GetRow(0).Values);
+    }
+
+    [Fact]
+    public void Table_DeleteIthRow_ShouldNotDeleteRow_WhenIndexIsInvalid()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "Adolfo" };
+      List<string> valuesRow2 = new List<string> { "Jacinto" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+
+      //Act
+      table.DeleteIthRow(2);
+      table.DeleteIthRow(-1);
+
+      //Assert
+      Assert.Equal(2, table.NumRows());
+      Assert.Equal(row1.Values, table.GetRow(0).Values);
+      Assert.Equal(row2.Values, table.GetRow(1).Values);
+    }
+    #endregion
   }
 }

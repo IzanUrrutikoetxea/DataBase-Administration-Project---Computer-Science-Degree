@@ -130,6 +130,7 @@ namespace DbManager
         public void DeleteIthRow(int rowIndex)
         {
           //TODO DEADLINE 1.A: Delete the i-th row. If there is no i-th row, do nothing
+          if (Rows.Count < rowIndex + 1 || rowIndex < 0) { return; }
           Row row = GetRow(rowIndex);
           List<Row> newRows = new List<Row>();
           foreach (Row r in Rows)
