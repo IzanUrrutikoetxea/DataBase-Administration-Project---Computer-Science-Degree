@@ -159,10 +159,11 @@ namespace DbManager
 
         public void DeleteWhere(Condition condition)
         {
-            //TODO DEADLINE 1.A: Delete all rows where the condition is true. Check RowIndicesWhereConditionIsTrue()
-            foreach (int index in RowIndicesWhereConditionIsTrue(condition))
-            {
-              DeleteIthRow(index);
+          //TODO DEADLINE 1.A: Delete all rows where the condition is true. Check RowIndicesWhereConditionIsTrue()
+          var indexes = RowIndicesWhereConditionIsTrue(condition);
+          for (int i = indexes.Count - 1; i >=0; i--)
+          {
+            DeleteIthRow(indexes[i]);
           }
         }
 
