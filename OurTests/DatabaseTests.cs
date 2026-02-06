@@ -354,5 +354,78 @@ namespace OurTests
       Assert.Equal(4, database.TableByName("TestTable").NumRows());
     }
     #endregion
+
+    #region Select Tests
+    [Fact]
+    public void Database_Select_ShouldReturnNull_WhenTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var columns = new List<string>() { "Age" };
+      var condition = new DbManager.Condition("Name", "=", "Maider");
+
+      //Act
+      var table = database.Select("Pepe", columns, condition);
+
+      //Assert
+      Assert.Null(table);
+    }
+    [Fact]
+    public void Database_Select_ShouldSetAppropietalyLastMessage_WhenTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var columns = new List<string>() { "Age" };
+      var condition = new DbManager.Condition("Name", "=", "Maider");
+
+      //Act
+      var table = database.Select("Pepe", columns, condition);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.TableDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_Select_ShouldReturnNull_WhenAColumnDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var columns = new List<string>() { "Class" };
+      var condition = new DbManager.Condition("Name", "=", "Maider");
+
+      //Act
+      var table = database.Select("TestTable", columns, condition);
+
+      //Assert
+      Assert.Null(table);
+    }
+    [Fact]
+    public void Database_Select_ShouldSetAppropietalyLastMessage_WhenAColumnDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var columns = new List<string>() { "Class" };
+      var condition = new DbManager.Condition("Name", "=", "Maider");
+
+      //Act
+      var table = database.Select("TestTable", columns, condition);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.ColumnDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_Select_ShouldReturnATable_WhenAllGoesOk()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var columns = new List<string>() { "Height" };
+      var condition = new DbManager.Condition("Name", "=", "Maider");
+
+      //Act
+      var table = database.Select("TestTable", columns, condition);
+
+      //Assert
+      Assert.NotNull(table);
+    }
+    #endregion
   }
 }
