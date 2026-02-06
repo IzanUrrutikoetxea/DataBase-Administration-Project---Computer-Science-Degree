@@ -7,21 +7,21 @@ using DbManager;
 
 namespace DbManager
 {
-    public class Condition
-    {
-        public string ColumnName { get; private set; }
-        public string Operator { get; private set; }
-        public string LiteralValue { get; private set; }
+  public class Condition
+  {
+    public string ColumnName { get; private set; }
+    public string Operator { get; private set; }
+    public string LiteralValue { get; private set; }
 
-        public Condition(string column, string op, string literalValue)
-        {
-            //TODO DEADLINE 1A: Initialize member variables
-            if (string.IsNullOrEmpty(column)) { throw new ArgumentException("Column name cannot be null or empty.", nameof(column)); }
-            if (string.IsNullOrEmpty(op)) { throw new ArgumentException("Operator cannot be null or empty.", nameof(column)); }
-            if (string.IsNullOrEmpty(literalValue)) { throw new ArgumentException("Value cannot be null or empty.", nameof(column)); }
-             ColumnName = column;
-             Operator = op;
-             LiteralValue = literalValue;
+    public Condition(string column, string op, string literalValue)
+    {
+      //TODO DEADLINE 1A: Initialize member variables
+      if (string.IsNullOrEmpty(column)) { throw new ArgumentException("Column name cannot be null or empty.", nameof(column)); }
+      if (string.IsNullOrEmpty(op)) { throw new ArgumentException("Operator cannot be null or empty.", nameof(column)); }
+      if (string.IsNullOrEmpty(literalValue)) { throw new ArgumentException("Value cannot be null or empty.", nameof(column)); }
+        ColumnName = column;
+        Operator = op;
+        LiteralValue = literalValue;
     }
 
 
