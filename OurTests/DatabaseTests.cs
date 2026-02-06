@@ -441,5 +441,88 @@ namespace OurTests
       Assert.Equal(table.ToString(), DbManager.Table.CreateTestTable().Select(columns, condition).ToString());
     }
     #endregion
+
+    #region DeleteWhere Tests
+    [Fact]
+    public void Database_DeleteWhere_ShouldReturnFalse_WhenTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var condition = new DbManager.Condition("Age", "=", "25");
+
+      //Act
+      var result = database.DeleteWhere("Pepe", condition);
+
+      //Assert
+      Assert.False(result);
+    }
+    [Fact]
+    public void Database_DeleteWhere_ShouldSetTheCorrectLastMessage_WhenTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var condition = new DbManager.Condition("Age", "=", "25");
+
+      //Act
+      var result = database.DeleteWhere("Pepe", condition);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.TableDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_DeleteWhere_ShouldReturnFalse_WhenColumnDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var condition = new DbManager.Condition("Pepe", "=", "25");
+
+      //Act
+      var result = database.DeleteWhere("TestTable", condition);
+
+      //Assert
+      Assert.False(result);
+    }
+    [Fact]
+    public void Database_DeleteWhere_ShouldSetTheCorrectLastMessage_WhenColumnDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var condition = new DbManager.Condition("Pepe", "=", "25");
+
+      //Act
+      var result = database.DeleteWhere("TestTable", condition);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.ColumnDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_DeleteWhere_ShouldReturnTrue_WhenAllGoesOk()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var condition = new DbManager.Condition("Age", "=", "25");
+
+      //Act
+      var result = database.DeleteWhere("TestTable", condition);
+
+      //Assert
+      Assert.True(result);
+    }
+    [Fact]
+    public void Database_DeleteWhere_ShouldDeleteRowsCorrectly_WhenAllGoesOk()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var condition = new DbManager.Condition("Age", "=", "25");
+      var expectedTable = DbManager.Table.CreateTestTable();
+      expectedTable.DeleteWhere(condition);
+
+      //Act
+      var result = database.DeleteWhere("TestTable", condition);
+
+      //Assert
+      Assert.Equal(expectedTable.ToString(), database.TableByName("TestTable").ToString());
+    }
+    #endregion
   }
 }
