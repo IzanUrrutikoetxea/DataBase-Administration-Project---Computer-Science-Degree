@@ -98,24 +98,32 @@ namespace DbManager
              return result;
           }
           result += "[";
-          foreach (ColumnDefinition column in ColumnDefinitions)
+          for (int i = 0; i < ColumnDefinitions.Count; i++)
           {
-            result += $"'{column.Name}',";
+            result += $"'{ColumnDefinitions[i].Name}'";
+            if (i != ColumnDefinitions.Count - 1)
+            {
+              result += ",";
+            }
           }
           result += "]";
           if (Rows.Count == 0)
           {
             return result;
           }
-          foreach(Row row in Rows)
+          for (int i = 0; i < Rows.Count; i++)
           {
             result += "{";
-            foreach (string value in row.Values)
+            for (int j = 0; j < Rows[i].Values.Count; j++)
             {
-              result += $"'{value}',";
+              result += $"'{Rows[i].Values[j]}'";
+              if (j != Rows[i].Values.Count - 1)
+              {
+                result += ",";
+              }
             }
             result += "}";
-          }
+          }            
           return result;
         }
 

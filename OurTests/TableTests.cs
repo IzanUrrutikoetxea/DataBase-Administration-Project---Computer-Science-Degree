@@ -401,7 +401,7 @@ namespace OurTests
     }
     #endregion
 
-    #region Tabler ColumnIndexByName Tests
+    #region Table ColumnIndexByName Tests
       [Fact]
       public void Table_ColumnIndexByName_ShouldReturnTheCorrectColumnIndex()
       {
@@ -460,6 +460,102 @@ namespace OurTests
         Assert.Throws<ArgumentException>(() => table.ColumnIndexByName(""));
         Assert.Throws<ArgumentException>(() => table.ColumnIndexByName(null));
       }
+    #endregion
+
+    #region Table ToString Tests
+    [Fact]
+    public void Table_ToString_ShouldReturnTheCorrectStringRepresentation_ForOneColumnAndMultipleRows()
+    {
+      //Arrange
+      string expectedResult = "['Name']{'Adolfo'}{'Jacinto'}";
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "Adolfo" };
+      List<string> valuesRow2 = new List<string> { "Jacinto" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+
+      //Act
+      string tableString = table.ToString();
+
+      //Assert
+      Assert.Equal(expectedResult, tableString);
+    }
+    [Fact]
+    public void Table_ToString_ShouldReturnTheCorrectStringRepresentation_ForMultipleColumnsAndMultipleRows()
+    {
+      //Arrange
+      string expectedResult = "['Name','Age']{'Adolfo','23'}{'Jacinto','24'}";
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Age"))
+      };
+
+      List<string> valuesRow1 = new List<string> { "Adolfo", "23" };
+      List<string> valuesRow2 = new List<string> { "Jacinto", "24" };
+
+      DbManager.Row row1 = new DbManager.Row(columnDefinitions, valuesRow1);
+      DbManager.Row row2 = new DbManager.Row(columnDefinitions, valuesRow2);
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      table.AddRow(row1);
+      table.AddRow(row2);
+
+      //Act
+      string tableString = table.ToString();
+
+      //Assert
+      Assert.Equal(expectedResult, tableString);
+    }
+    [Fact]
+    public void Table_ToString_ShouldReturnTheCorrectStringRepresentation_ForNoneColumnsAndNoneRows()
+    {
+      //Arrange
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act
+      string tableString = table.ToString();
+
+      //Assert
+      Assert.Equal(string.Empty, tableString);
+    }
+    [Fact]
+    public void Table_ToString_ShouldReturnTheCorrectStringRepresentation_ForOneColumnAndNoneRows()
+    {
+      //Arrange
+      string expectedResult = "['Name']";
+      string tableName = "People";
+      List<DbManager.ColumnDefinition> columnDefinitions = new List<DbManager.ColumnDefinition>
+      {
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
+      };
+
+      DbManager.Table table = new DbManager.Table(tableName, columnDefinitions);
+
+      //Act
+      string tableString = table.ToString();
+
+      //Assert
+      Assert.Equal(expectedResult, tableString);
+    }
     #endregion
   }
 }
