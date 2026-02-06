@@ -426,6 +426,20 @@ namespace OurTests
       //Assert
       Assert.NotNull(table);
     }
+    [Fact]
+    public void Database_Select_ShouldReturnTheCorrect_WhenAllGoesOk()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var columns = new List<string>() { "Height" };
+      var condition = new DbManager.Condition("Name", "=", "Maider");
+
+      //Act
+      var table = database.Select("TestTable", columns, condition);
+
+      //Assert
+      Assert.Equal(table.ToString(), DbManager.Table.CreateTestTable().Select(columns, condition).ToString());
+    }
     #endregion
   }
 }
