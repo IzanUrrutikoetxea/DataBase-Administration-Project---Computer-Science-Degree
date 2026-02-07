@@ -23,10 +23,10 @@ namespace DbManager
       //Note: The parsing of CREATE TABLE should accept empty columns "()"
       //And then, an execution error should be given if a CreateTable without columns is executed
       //CREATE TABLE TableName (ColumnName DataType[,ColumnName DataType... ])
-      const string createTablePattern = null;
+      const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>\w+)\s+(?<columns>\w+)$";
       var createTable = new Regex(createTablePattern, RegexOptions.IgnoreCase);
       //UPDATE TableName SET ColumnName=LiteralValue[,ColumnName=LiteralValue,…] WHERE Condition  
-      const string updateTablePattern = null;
+      const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<columns>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
       var updateTable = new Regex(updateTablePattern, RegexOptions.IgnoreCase);
       //DELETE FROM TableName WHERE Condition
       const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
@@ -89,19 +89,49 @@ namespace DbManager
       if (dropTableMatch.Success)
       {
         var table = dropTableMatch.Groups["table"].Value;
+
         return new DropTable(table);
       }
 
       var createTableMatch = createTable.Match(trimmedQuery);
       if (createTableMatch.Success)
       {
-        return null;
+        var table = createTableMatch.Groups["table"].Value;
+
+        var unsplittedColumns = createTableMatch.Groups["columns"].Value;
+        var splittedColumns = unsplittedColumns.Split(',');
+        var columns = new List<ColumnDefinition>();
+        for (int i=0; i < splittedColumns.Length; i ++)
+        {
+          var splittedSplitedColumn = splittedColumns[i].Split(" ");
+          if (splittedSplitedColumn[1] == "String") columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, splittedSplitedColumn[0]));
+          else if (splittedSplitedColumn[1] == "Int") columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, splittedSplitedColumn[0]));
+          else if (splittedSplitedColumn[1] == "Double") columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Double, splittedSplitedColumn[0]));
+        }
+
+        return new CreateTable(table, columns);
       }
 
       var updateTableMatch = updateTable.Match(trimmedQuery);
       if (updateTableMatch.Success)
       {
-        return null;
+        var table = updateTableMatch.Groups["table"].Value;
+
+        var unsplittedColumns = updateTableMatch.Groups["columns"].Value;
+        var splittedColumns = unsplittedColumns.Split(',');
+        var setValues = new List<SetValue>();
+        for (int i = 0; i < splittedColumns.Length; i++)
+        {
+          var splittedSplitedColumn = splittedColumns[i].Split("=");
+          setValues.Add(new SetValue(splittedSplitedColumn[0], splittedSplitedColumn[1]));
+        }
+
+        var column = updateTableMatch.Groups["column"].Value;
+        var op = updateTableMatch.Groups["operator"].Value;
+        var value = updateTableMatch.Groups["value"].Value;
+        var condition = new Condition(column, op, value);
+
+        return new Update(table, setValues, condition);
       }
 
       var deleteFromMatch = deleteFrom.Match(trimmedQuery);
