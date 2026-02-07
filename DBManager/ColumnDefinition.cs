@@ -1,5 +1,6 @@
 using DbManager.Parser;
 using System;
+using System.Collections.Generic;
 
 
 namespace DbManager
@@ -23,18 +24,16 @@ namespace DbManager
 
     private static string Encode(string value)
     {
-        //TODO DEADLINE 1.C: Encode the delimiter in the value
-            
-        return null;
-            
+      //TODO DEADLINE 1.C: Encode the delimiter in the value
+      string[] values = value.Split(Delimiter);
+      return values[0] + DelimiterEncoded + values[1];
     }
 
     private static string Decode(string value)
     {
-        //TODO DEADLINE 1.C: Decode the delimiter in the value
-            
-        return null;
-            
+      //TODO DEADLINE 1.C: Decode the delimiter in the value
+      string[] values = value.Split(DelimiterEncoded);
+      return values[0] + Delimiter + values[1];
     }
 
     public string AsText()

@@ -1,3 +1,5 @@
+using System.Net.WebSockets;
+using System.Runtime.InteropServices.Marshalling;
 using DbManager;
 namespace OurTests
 {
@@ -34,14 +36,6 @@ namespace OurTests
       //Assert
       Assert.Null(columnDefinition.Name);
     }
-    #endregion
-
-    #region Encode Tests
-
-    #endregion
-
-    #region Decode Tests
-
     #endregion
 
     #region AsText Tests
