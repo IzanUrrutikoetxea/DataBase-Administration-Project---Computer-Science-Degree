@@ -1,55 +1,68 @@
 using DbManager.Parser;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace DbManager
 {
-    public class MiniSQLParser
+  public class MiniSQLParser
+  {
+    public static MiniSqlQuery Parse(string miniSQLQuery)
     {
-        public static MiniSqlQuery Parse(string miniSQLQuery)
-        {
-            //TODO DEADLINE 2
-            const string selectPattern = null;
-            
-            const string insertPattern = null;
-            
-            const string dropTablePattern = null;
-            
-            //Note: The parsing of CREATE TABLE should accept empty columns "()"
-            //And then, an execution error should be given if a CreateTable without columns is executed
-            const string createTablePattern = null;
-            
-            const string updateTablePattern = null;
-            
-            const string deletePattern = null;
+      //TODO DEADLINE 2
+      //SELECT ColumnName[,ColumnName…] FROM Table [WHERE Condition]
+      const string selectPattern = null;
+      //INSERT INTO TableName VALUES (LiteralValue[,LiteralValue, …])
+      const string insertPattern = null;
+      //DROP TABLE TableName
+      const string dropTablePattern = @"^DROP\s+TABLE\s+(?<table>\w+)$";
+      var dropTable = new Regex(dropTablePattern, RegexOptions.IgnoreCase);
+
+      //Note: The parsing of CREATE TABLE should accept empty columns "()"
+      //And then, an execution error should be given if a CreateTable without columns is executed
+      //CREATE TABLE TableName (ColumnName DataType[,ColumnName DataType... ])
+      const string createTablePattern = null;
+      //UPDATE TableName SET ColumnName=LiteralValue[,ColumnName=LiteralValue,…] WHERE Condition  
+      const string updateTablePattern = null;
+      //DELETE FROM TableName WHERE Condition
+      const string deletePattern = null;
             
 
-            //TODO DEADLINE 4
-            const string createSecurityProfilePattern = null;
+      //TODO DEADLINE 4
+      const string createSecurityProfilePattern = null;
             
-            const string dropSecurityProfilePattern = null;
+      const string dropSecurityProfilePattern = null;
             
-            const string grantPattern = null;
+      const string grantPattern = null;
             
-            const string revokePattern = null;
+      const string revokePattern = null;
             
-            const string addUserPattern = null;
+      const string addUserPattern = null;
             
-            const string deleteUserPattern = null;
-            
+      const string deleteUserPattern = null;
 
-            //TODO DEADLINE 2
-            //Parse query using the regular expressions above one by one. If there is a match, create an instance of the query with the parsed parameters
-            //For example, if the query is a "SELECT ...", there should be a match with selectPattern. We would create and return an instance of Select
-            //initialized with the table name, the columns, and (possibly) an instance of Condition.
-            //If there is no match, it means there is a syntax error. We will return null.
 
-            //TODO DEADLINE 4
-            //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
+      //TODO DEADLINE 2
+      //Parse query using the regular expressions above one by one. If there is a match, create an instance of the query with the parsed parameters
+      //For example, if the query is a "SELECT ...", there should be a match with selectPattern. We would create and return an instance of Select
+      //initialized with the table name, the columns, and (possibly) an instance of Condition.
+      //If there is no match, it means there is a syntax error. We will return null.
+      var trimmedQuery = miniSQLQuery.Trim();
+
+      var deleteTableMatch = dropTable.Match(trimmedQuery);
+
+      if (deleteTableMatch.Success)
+      {
+        var table = deleteTableMatch.Groups["table"].Value;
+        return new DropTable(table);
+      }
+     
+      //TODO DEADLINE 4
+      //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
             
-            return null;
+      return null;
            
-        }
+    }
 
         static List<string> CommaSeparatedNames(string text)
         {
