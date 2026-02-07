@@ -25,7 +25,8 @@ namespace DbManager
       //UPDATE TableName SET ColumnName=LiteralValue[,ColumnName=LiteralValue,…] WHERE Condition  
       const string updateTablePattern = null;
       //DELETE FROM TableName WHERE Condition
-      const string deletePattern = null;
+      const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
+      var deleteFrom = new Regex(deletePattern, RegexOptions.IgnoreCase);
             
 
       //TODO DEADLINE 4
@@ -49,18 +50,28 @@ namespace DbManager
       //If there is no match, it means there is a syntax error. We will return null.
       var trimmedQuery = miniSQLQuery.Trim();
 
-      var deleteTableMatch = dropTable.Match(trimmedQuery);
+      var dropTableMatch = dropTable.Match(trimmedQuery);
+      var deleteFromMatch = deleteFrom.Match(trimmedQuery);
 
-      if (deleteTableMatch.Success)
+      if (dropTableMatch.Success)
       {
-        var table = deleteTableMatch.Groups["table"].Value;
+        var table = dropTableMatch.Groups["table"].Value;
         return new DropTable(table);
       }
-     
-      //TODO DEADLINE 4
-      //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
-            
-      return null;
+      if (deleteFromMatch.Success)
+      {
+        var table = deleteFromMatch.Groups["table"].Value;
+        var column = deleteFromMatch.Groups["column"].Value;
+        var op = deleteFromMatch.Groups["operator"].Value;
+        var value = deleteFromMatch.Groups["value"].Value;
+        var condition = new Condition(column, op, value);
+        return new Delete(table, condition);
+      }
+
+        //TODO DEADLINE 4
+        //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
+
+        return null;
            
     }
 
