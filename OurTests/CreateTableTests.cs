@@ -8,18 +8,12 @@ namespace OurTests
     {
       //Arrange
       var table = "TestTable";
-      var columns = new List<DbManager.ColumnDefinition>()
-      {
-        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
-        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
-      };
 
       //Act
-      var createTable = new DbManager.CreateTable(table, columns);
+      var dropTable = new DbManager.DropTable(table);
 
       //Assert
-      Assert.Equal(table, createTable.Table);
-      Assert.Equal(columns, createTable.ColumnsParameters);
+      Assert.Equal(table, dropTable.Table);
     }
     #endregion
   }
