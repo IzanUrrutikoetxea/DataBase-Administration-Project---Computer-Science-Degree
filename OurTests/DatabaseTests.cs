@@ -524,5 +524,118 @@ namespace OurTests
       Assert.Equal(expectedTable.ToString(), database.TableByName("TestTable").ToString());
     }
     #endregion
+
+    #region Update Tests
+    [Fact]
+    public void Database_Update_ShouldReturnFalse_WhenTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var setValues = new List<DbManager.Parser.SetValue>()
+      {
+        (new DbManager.Parser.SetValue("Age","32")),
+        (new DbManager.Parser.SetValue("Height","123.22"))
+      };
+      var condition = new DbManager.Condition("Age", "=", "25");
+
+      //Act
+      var result = database.Update("Pepe", setValues, condition);
+
+      //Assert
+      Assert.False(result);
+    }
+    [Fact]
+    public void Database_Update_ShouldReturnFalse_WhenColumnDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var setValues = new List<DbManager.Parser.SetValue>()
+      {
+        (new DbManager.Parser.SetValue("Age","32")),
+        (new DbManager.Parser.SetValue("Height","123.22"))
+      };
+      var condition = new DbManager.Condition("Pepe", "=", "25");
+
+      //Act
+      var result = database.Update("TestTable", setValues, condition);
+
+      //Assert
+      Assert.False(result);
+    }
+    [Fact]
+    public void Database_Update_ShouldSetLastMessageCorrectly_WhenTableDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var setValues = new List<DbManager.Parser.SetValue>()
+      {
+        (new DbManager.Parser.SetValue("Age","32")),
+        (new DbManager.Parser.SetValue("Height","123.22"))
+      };
+      var condition = new DbManager.Condition("Age", "=", "25");
+
+      //Act
+      var result = database.Update("Pepe", setValues, condition);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.TableDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_Update_ShouldSetLastMessageCorrectly_WhenColumnDoesNotExist()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var setValues = new List<DbManager.Parser.SetValue>()
+      {
+        (new DbManager.Parser.SetValue("Age","32")),
+        (new DbManager.Parser.SetValue("Height","123.22"))
+      };
+      var condition = new DbManager.Condition("Pepe", "=", "25");
+
+      //Act
+      var result = database.Update("TestTable", setValues, condition);
+
+      //Assert
+      Assert.Equal(DbManager.Constants.ColumnDoesNotExistError, database.LastErrorMessage);
+    }
+    [Fact]
+    public void Database_Update_ShouldReturnTrue_WhenAllGoesOk()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var setValues = new List<DbManager.Parser.SetValue>()
+      {
+        (new DbManager.Parser.SetValue("Age","32")),
+        (new DbManager.Parser.SetValue("Height","123.22"))
+      };
+      var condition = new DbManager.Condition("Age", "=", "25");
+
+      //Act
+      var result = database.Update("TestTable", setValues, condition);
+
+      //Assert
+      Assert.True(result);
+    }
+    [Fact]
+    public void Database_Update_ShouldUpdateTheDatabaseCorrectly_WhenAllGoesOk()
+    {
+      //Arrange
+      var database = DbManager.Database.CreateTestDatabase();
+      var setValues = new List<DbManager.Parser.SetValue>()
+      {
+        (new DbManager.Parser.SetValue("Age","32")),
+        (new DbManager.Parser.SetValue("Height","123.22"))
+      };
+      var condition = new DbManager.Condition("Age", "=", "25");
+
+      var table = DbManager.Table.CreateTestTable();
+      var x = table.Update(setValues, condition);
+      //Act
+      var result = database.Update("TestTable", setValues, condition);
+
+      //Assert
+      Assert.Equal(database.TableByName("TestTable").ToString(), table.ToString());
+    }
+    #endregion
   }
 }
