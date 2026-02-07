@@ -35,5 +35,35 @@ namespace OurTests
       Assert.Null(columnDefinition.Name);
     }
     #endregion
+
+    #region Encode Tests
+
+    #endregion
+
+    #region Decode Tests
+
+    #endregion
+
+    #region AsText Tests
+    [Theory]
+    [InlineData("Age",DbManager.ColumnDefinition.DataType.Int)]
+    [InlineData("Name",DbManager.ColumnDefinition.DataType.String)]
+    [InlineData("Height",DbManager.ColumnDefinition.DataType.Double)]
+    public void ColumnDefinition_AsText_ShouldReturnTheCOlumnAsString(string name, DbManager.ColumnDefinition.DataType type)
+    {
+      //Arrange
+      var column = new DbManager.ColumnDefinition(type, name);
+
+      //Act 
+      var result = column.AsText();
+
+      //Assert
+      Assert.Equal(name + "->" + type.ToString(), result);
+    }
+    #endregion
+
+    #region Parse Tests
+
+    #endregion
   }
 }
