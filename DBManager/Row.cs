@@ -73,18 +73,39 @@ namespace DbManager
     private static string Encode(string value)
     {
       //TODO DEADLINE 1.C: Encode the delimiter in value
-
-            
-      return null;
-            
+      string[] values = value.Split(Delimiter);
+      string result = "";
+      for (int i = 0; i < values.Length; i++)
+      {
+        if (i == values.Length - 1)
+        {
+          result += values[i];
+        }
+        else
+        {
+          result += values[i] + DelimiterEncoded;
+        }
+      }
+      return result;
     }
 
     private static string Decode(string value)
     {
       //TODO DEADLINE 1.C: Decode the value doing the opposite of Encode()
-            
-      return null;
-            
+      string[] values = value.Split(DelimiterEncoded);
+      string result = "";
+      for (int i = 0; i < values.Length; i++)
+      {
+        if (i == values.Length - 1)
+        {
+          result += values[i];
+        }
+        else
+        {
+          result += values[i] + Delimiter;
+        }
+      }
+      return result;
     }
 
     public string AsText()
