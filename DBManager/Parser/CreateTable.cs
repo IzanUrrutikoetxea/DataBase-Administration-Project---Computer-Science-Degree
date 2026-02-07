@@ -5,25 +5,23 @@ using DbManager.Parser;
 
 namespace DbManager
 {
- 
-    public class CreateTable : MiniSqlQuery
+  public class CreateTable : MiniSqlQuery
+  {
+    public string Table { get; private set; }
+    public List<ColumnDefinition> ColumnsParameters { get; private set; } = new List<ColumnDefinition>();
+
+    public CreateTable(string table, List<ColumnDefinition> columns)
     {
-        public string Table { get; private set; }
-        public List<ColumnDefinition> ColumnsParameters { get; private set; } = new List<ColumnDefinition>();
-
-        public CreateTable(string table, List<ColumnDefinition> columns)
-        {
-            //TODO DEADLINE 2: Initialize member variables
-            
-        }
-        public string Execute(Database database)
-        {
-            //TODO DEADLINE 3: Run the query and return the appropriate message
-            //CreateTableSuccess or the last error in the database
-            
-            return null;
-            
-        }
-
+      //TODO DEADLINE 2: Initialize member variables
+      Table = table;
+      ColumnsParameters = columns;
     }
+    public string Execute(Database database)
+    {
+      //TODO DEADLINE 3: Run the query and return the appropriate message
+      //CreateTableSuccess or the last error in the database
+            
+      return null;  
+    }
+  }
 }
