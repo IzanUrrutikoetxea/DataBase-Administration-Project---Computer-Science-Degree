@@ -90,9 +90,19 @@ namespace DbManager
     public string AsText()
     {
       //TODO DEADLINE 1.C: Return the row as string with all values separated by the delimiter
-            
-      return null;
-            
+      string result = "";
+      for (int i = 0; i < Values.Count; i++)
+      {
+        if (i == Values.Count - 1)
+        {
+          result += Values[i];
+        }
+        else
+        {
+          result += Values[i] + Delimiter;
+        }
+      }
+      return result;
     }
 
     public static Row Parse(List<ColumnDefinition> columns, string value)

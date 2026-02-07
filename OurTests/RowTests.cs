@@ -180,5 +180,25 @@ namespace OurTests
       Assert.False(result);
     }
     #endregion
+
+    #region AsText Tests
+    [Fact]
+    public void Row_AsText_ShouldReturnTheRowAsString()
+    {
+      //Arrange
+      var row1 = DbManager.Table.CreateTestTable().GetRow(0);
+      var row2 = DbManager.Table.CreateTestTable().GetRow(1);
+      var expectedResult1 = "Rodolfo:1.62:25";
+      var expectedResult2 = "Maider:1.67:67";
+
+      //Act
+      var string1 = row1.AsText();
+      var string2 = row2.AsText();
+
+      //Assert
+      Assert.Equal(expectedResult1, string1);
+      Assert.Equal(expectedResult2, string2);
+    }
+    #endregion
   }
 }
