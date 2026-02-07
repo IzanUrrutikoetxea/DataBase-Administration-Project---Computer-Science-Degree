@@ -57,7 +57,20 @@ namespace OurTests
     #endregion
 
     #region Parse Tests
+    [Fact]
+    public void ColumnDefinition_Parse_ShouldReturnTheCorrectColumnDefinition()
+    {
+      //Arrange
+      var column = new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name");
+      var asText = column.AsText();
 
+      //Act
+      var resultColumn = DbManager.ColumnDefinition.Parse(asText);
+      
+      //Assert
+      Assert.Equal(column.Name, resultColumn.Name);
+      Assert.Equal(column.Type, resultColumn.Type);
+    }
     #endregion
   }
 }
