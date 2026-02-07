@@ -200,5 +200,31 @@ namespace OurTests
       Assert.Equal(expectedResult2, string2);
     }
     #endregion
+
+    #region Parse Tests
+    [Fact]
+    public void Row_Parse_ShouldReturnTheCorrectRow()
+    {
+      //Arrange
+      var columns = new List<DbManager.ColumnDefinition>()
+      { 
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age")),
+        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name"))
+      };
+
+      var values = new List<string>() { "22", "Pablo" };
+
+      var row = new DbManager.Row(columns, values);
+
+      var value = row.AsText();
+
+      //Act
+      var resultRow = DbManager.Row.Parse(columns, value);
+
+      //Assert
+      Assert.Equal(row.Values, resultRow.Values);
+      Assert.Equal(row.GetColumnDefinition(), resultRow.GetColumnDefinition());
+    }
+    #endregion
   }
 }
