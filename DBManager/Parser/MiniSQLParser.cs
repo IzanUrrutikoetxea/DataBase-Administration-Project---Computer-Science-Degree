@@ -11,26 +11,26 @@ namespace DbManager
     {
       //TODO DEADLINE 2
       //SELECT ColumnName[,ColumnName…] FROM Table [WHERE Condition]
-      const string selectPattern = @"^SELECT\s+(?<columns>\w+)\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
-      var select = new Regex(selectPattern, RegexOptions.IgnoreCase);
+      const string selectPattern = @"^SELECT\s+(?<columns>[a-zA-Z,]+)\s+FROM\s+(?<table>[a-zA-Z]+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
+      var select = new Regex(selectPattern, RegexOptions.None);
       //INSERT INTO TableName VALUES (LiteralValue[,LiteralValue, …])
       const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s+(?<values>\w+)$"; ;
-      var insert = new Regex(insertPattern, RegexOptions.IgnoreCase);
+      var insert = new Regex(insertPattern, RegexOptions.None);
       //DROP TABLE TableName
       const string dropTablePattern = @"^DROP\s+TABLE\s+(?<table>\w+)$";
-      var dropTable = new Regex(dropTablePattern, RegexOptions.IgnoreCase);
+      var dropTable = new Regex(dropTablePattern, RegexOptions.None);
 
       //Note: The parsing of CREATE TABLE should accept empty columns "()"
       //And then, an execution error should be given if a CreateTable without columns is executed
       //CREATE TABLE TableName (ColumnName DataType[,ColumnName DataType... ])
       const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>\w+)\s+(?<columns>\w+)$";
-      var createTable = new Regex(createTablePattern, RegexOptions.IgnoreCase);
+      var createTable = new Regex(createTablePattern, RegexOptions.None);
       //UPDATE TableName SET ColumnName=LiteralValue[,ColumnName=LiteralValue,…] WHERE Condition  
       const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<columns>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
-      var updateTable = new Regex(updateTablePattern, RegexOptions.IgnoreCase);
+      var updateTable = new Regex(updateTablePattern, RegexOptions.None);
       //DELETE FROM TableName WHERE Condition
       const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
-      var deleteFrom = new Regex(deletePattern, RegexOptions.IgnoreCase);
+      var deleteFrom = new Regex(deletePattern, RegexOptions.None);
             
 
       //TODO DEADLINE 4
