@@ -2,20 +2,24 @@ using DbManager;
 
 namespace OurTests
 {
-  public class DeleteUserTests
+  public class GranTests
   {
     #region Constructor Tests
     [Fact]
-    public void DeleteUser_Constructor_ShouldInitializeAttributesCorrectly()
+    public void Grant_Constructor_ShouldInitializeAttributesCorrectly()
     {
       //Arrange
-      var username = "pepito";
+      var privilegeName = "pepito";
+      var tableName = "TestTable";
+      var profileName = "juan";
 
       //Act
-      var deleteUser = new DeleteUser(username);
+      var grant = new Grant(privilegeName, tableName, profileName);
 
       //Assert
-      Assert.Equal(username, deleteUser.Username);
+      Assert.Equal(privilegeName, grant.PrivilegeName);
+      Assert.Equal(tableName, grant.TableName);
+      Assert.Equal(profileName, grant.ProfileName);
 
     }
     #endregion

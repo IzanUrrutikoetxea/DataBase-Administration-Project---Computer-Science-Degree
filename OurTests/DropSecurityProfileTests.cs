@@ -2,20 +2,20 @@ using DbManager;
 
 namespace OurTests
 {
-  public class DeleteUserTests
+  public class DropSecurityProfileTests
   {
     #region Constructor Tests
     [Fact]
-    public void DeleteUser_Constructor_ShouldInitializeAttributesCorrectly()
+    public void DropSecurityProfile_Constructor_ShouldInitializeAttributesCorrectly()
     {
       //Arrange
-      var username = "pepito";
+      var profileName = "pepito";
 
       //Act
-      var deleteUser = new DeleteUser(username);
+      var dropSecurityProfile = new DropSecurityProfile(profileName);
 
       //Assert
-      Assert.Equal(username, deleteUser.Username);
+      Assert.Equal(profileName, dropSecurityProfile.ProfileName);
 
     }
     #endregion
