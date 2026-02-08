@@ -35,22 +35,22 @@ namespace DbManager
 
       //TODO DEADLINE 4
       //CREATE SECURITY PROFILE SecurityProfile
-      const string createSecurityProfilePattern = @"^CREATE\s+SECURITY\s+PROFILE\s+(?<profileName>\w+)$";
+      const string createSecurityProfilePattern = @"^CREATE\s+SECURITY\s+PROFILE\s+(?<profileName>[a-zA-Z]+)$";
       var createSecurityProfile = new Regex(createSecurityProfilePattern, RegexOptions.None);
       //DROP SECURITY PROFILE SecurityProfile
-      const string dropSecurityProfilePattern = @"^DROP\s+SECURITY\s+PROFILE\s+(?<profileName>\w+)$";
+      const string dropSecurityProfilePattern = @"^DROP\s+SECURITY\s+PROFILE\s+(?<profileName>[a-zA-Z]+)$";
       var dropSecurityProfile = new Regex(dropSecurityProfilePattern, RegexOptions.None);
       //GRANT PrivilegeType ON TableName TO SecurityProfile
-      const string grantPattern = @"^GRANT\s+(?<privilegeName>[A-Z]+)\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
+      const string grantPattern = @"^GRANT\s+(?<privilegeName>[A-Z]+)\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>[a-zA-Z]+)$";
       var grant = new Regex(grantPattern, RegexOptions.None);
       //REVOKE PrivilegeType ON TableName TO SecurityProfile
-      const string revokePattern = @"^REVOKE\s+(?<privilegeName>[A-Z]+)\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
+      const string revokePattern = @"^REVOKE\s+(?<privilegeName>[A-Z]+)\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>[a-zA-Z]+)$";
       var revoke = new Regex(revokePattern, RegexOptions.None);
       //ADD USER (User,Password,SecurityProfile)
-      const string addUserPattern = @"^ADD\s+USER\s+\((?<user>\w+),(?<password>\w+),(?<profile>\w+)\)$""";
+      const string addUserPattern = @"^ADD\s+USER\s+\((?<user>[a-zA-Z]+)[,](?<password>[a-zA-Z]+)[,](?<profile>[a-zA-Z]+)\)$";
       var addUser = new Regex(addUserPattern, RegexOptions.None);
       //DELETE USER User
-      const string deleteUserPattern = @"^DELETE\s+USER\s+(?<user>\w+)$";
+      const string deleteUserPattern = @"^DELETE\s+USER\s+(?<user>[a-zA-Z]+)$";
       var deleteUser = new Regex(deleteUserPattern, RegexOptions.None);
 
 
