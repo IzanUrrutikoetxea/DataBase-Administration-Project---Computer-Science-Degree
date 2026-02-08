@@ -60,9 +60,7 @@ namespace DbManager
         var table = selectMatch.Groups["table"].Value;
 
         var unsplittedColumns = selectMatch.Groups["columns"].Value;
-        var splittedColumns = unsplittedColumns.Split(',');
-        var columns = new List<string>();
-        foreach (string column in splittedColumns) columns.Add(column);
+        var columns = CommaSeparatedNames(unsplittedColumns);
 
         var columnName = selectMatch.Groups["column"].Value;
         var op = selectMatch.Groups["operator"].Value;
@@ -78,9 +76,7 @@ namespace DbManager
         var table = insertMatch.Groups["table"].Value;
 
         var unsplittedValues = insertMatch.Groups["columns"].Value;
-        var splittedValues = unsplittedValues.Split(',');
-        var values = new List<string>();
-        foreach (string value in splittedValues) values.Add(value);
+        var values = CommaSeparatedNames(unsplittedValues);
 
         return new Insert(table, values);
       }
@@ -99,9 +95,9 @@ namespace DbManager
         var table = createTableMatch.Groups["table"].Value;
 
         var unsplittedColumns = createTableMatch.Groups["columns"].Value;
-        var splittedColumns = unsplittedColumns.Split(',');
+        var splittedColumns = CommaSeparatedNames(unsplittedColumns);
         var columns = new List<ColumnDefinition>();
-        for (int i=0; i < splittedColumns.Length; i ++)
+        for (int i=0; i < splittedColumns.Count; i ++)
         {
           var splittedSplitedColumn = splittedColumns[i].Split(" ");
           if (splittedSplitedColumn[1] == "String") columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, splittedSplitedColumn[0]));
@@ -118,9 +114,9 @@ namespace DbManager
         var table = updateTableMatch.Groups["table"].Value;
 
         var unsplittedColumns = updateTableMatch.Groups["columns"].Value;
-        var splittedColumns = unsplittedColumns.Split(',');
+        var splittedColumns = CommaSeparatedNames(unsplittedColumns);
         var setValues = new List<SetValue>();
-        for (int i = 0; i < splittedColumns.Length; i++)
+        for (int i = 0; i < splittedColumns.Count; i++)
         {
           var splittedSplitedColumn = splittedColumns[i].Split("=");
           setValues.Add(new SetValue(splittedSplitedColumn[0], splittedSplitedColumn[1]));
