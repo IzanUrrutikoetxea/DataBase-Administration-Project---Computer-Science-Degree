@@ -17,7 +17,7 @@ namespace DbManager
       const string insertPattern = @"^INSERT\s+INTO\s+(?<table>[a-zA-Z]+)\s+VALUES\s+(?<values>[a-zA-Z0-9,.]+)$"; ;
       var insert = new Regex(insertPattern, RegexOptions.None);
       //DROP TABLE TableName
-      const string dropTablePattern = @"^DROP\s+TABLE\s+(?<table>\w+)$";
+      const string dropTablePattern = @"^DROP\s+TABLE\s+(?<table>[a-zA-Z]+)$";
       var dropTable = new Regex(dropTablePattern, RegexOptions.None);
 
       //Note: The parsing of CREATE TABLE should accept empty columns "()"

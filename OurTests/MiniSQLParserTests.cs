@@ -168,5 +168,69 @@ namespace OurTests
       Assert.Null(MiniSQLParser.Parse("INSERT INTO TestTable VALUES "));
     }
     #endregion
+
+    #region Parse DropTable Tests
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseDropTableCorrectly()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var expectedReturn = new DropTable(tableName);
+
+      //Act
+      var result = MiniSQLParser.Parse("DROP TABLE TestTable");
+
+      //Assert
+      Assert.IsType<DropTable>(result);
+
+      var dropTable = (DropTable)result;
+
+      Assert.Equal(expectedReturn.Table, dropTable.Table);
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseDropTableCorrectlyWithSpaces()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var expectedReturn = new DropTable(tableName);
+
+      //Act
+      var result = MiniSQLParser.Parse("DROP       TABLE            TestTable");
+
+      //Assert
+      Assert.IsType<DropTable>(result);
+
+      var dropTable = (DropTable)result;
+
+      Assert.Equal(expectedReturn.Table, dropTable.Table);
+    }
+
+    [Theory]
+    [InlineData("drop TABLE TestTable")]
+    [InlineData("DROP table TestTable")]
+    [InlineData("DROp TABLE TestTable")]
+    public void MiniSQLParser_Parse_DropTable_ShouldReturnNull_ForIncorrectCapitalization(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Theory]
+    [InlineData("DROP TABLE TestTable_1")]
+    [InlineData("DROP TABLE TestTable1")]
+    public void MiniSQLParser_Parse_DropTable_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_DropTable_ShouldReturnNull_ForMissingTableName()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("DROP TABLE "));
+    }
+    #endregion
   }
 }
