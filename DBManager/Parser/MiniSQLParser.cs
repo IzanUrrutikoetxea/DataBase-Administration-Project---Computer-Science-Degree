@@ -35,22 +35,22 @@ namespace DbManager
 
       //TODO DEADLINE 4
       //CREATE SECURITY PROFILE SecurityProfile
-      const string createSecurityProfilePattern = null;
+      const string createSecurityProfilePattern = @"^CREATE\s+SECURITY\s+PROFILE\s+(?<profileName>\w+)$";
       var createSecurityProfile = new Regex(createSecurityProfilePattern, RegexOptions.None);
       //DROP SECURITY PROFILE SecurityProfile
-      const string dropSecurityProfilePattern = null;
+      const string dropSecurityProfilePattern = @"^DROP\s+SECURITY\s+PROFILE\s+(?<profileName>\w+)$";
       var dropSecurityProfile = new Regex(dropSecurityProfilePattern, RegexOptions.None);
       //GRANT PrivilegeType ON TableName TO SecurityProfile
-      const string grantPattern = null;
+      const string grantPattern = @"^GRANT\s+PrivilegeType\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
       var grant = new Regex(grantPattern, RegexOptions.None);
       //REVOKE PrivilegeType ON TableName TO SecurityProfile
-      const string revokePattern = null;
+      const string revokePattern = @"^REVOKE\s+PrivilegeType\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
       var revoke = new Regex(revokePattern, RegexOptions.None);
       //ADD USER (User,Password,SecurityProfile)
-      const string addUserPattern = null;
+      const string addUserPattern = @"^ADD\s+USER\s+\((?<user>\w+),(?<password>\w+),(?<profile>\w+)\)$""";
       var addUser = new Regex(addUserPattern, RegexOptions.None);
       //DELETE USER User
-      const string deleteUserPattern = null;
+      const string deleteUserPattern = @"^DELETE\s+USER\s+(?<user>\w+)$";
       var deleteUser = new Regex(deleteUserPattern, RegexOptions.None);
 
 
@@ -152,6 +152,7 @@ namespace DbManager
 
       //TODO DEADLINE 4
       //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
+
 
       return null;
            
