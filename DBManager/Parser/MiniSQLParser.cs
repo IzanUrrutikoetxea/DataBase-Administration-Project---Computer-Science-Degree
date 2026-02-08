@@ -153,6 +153,52 @@ namespace DbManager
       //TODO DEADLINE 4
       //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
 
+      var createSecurityProfileMatch = createSecurityProfile.Match(trimmedQuery);
+      if (createSecurityProfileMatch.Success)
+      {
+        var profileName = createSecurityProfileMatch.Groups["profileName"].Value;
+
+        return new CreateSecurityProfile(profileName);
+      }
+      var dropSecurityProfileMatch = dropSecurityProfile.Match(trimmedQuery);
+      if (dropSecurityProfileMatch.Success)
+      {
+        var profileName = dropSecurityProfileMatch.Groups["profileName"].Value;
+
+        return new DropSecurityProfile(profileName);
+      }
+      var grantMatch = grant.Match(trimmedQuery);
+      if (grantMatch.Success)
+      {
+        var table = grantMatch.Groups["table"].Value;
+        var profileName = grantMatch.Groups["profileName"].Value;
+
+        return new Grant(profileName, table, profileName);
+      }
+      var revokeMatch = revoke.Match(trimmedQuery);
+      if (revokeMatch.Success)
+      {
+        var table = revokeMatch.Groups["table"].Value;
+        var profileName = revokeMatch.Groups["profileName"].Value;
+
+        return new Revoke(profileName, table, profileName);
+      }
+      var addUserMatch = addUser.Match(trimmedQuery);
+      if (addUserMatch.Success)
+      {
+        var user = addUserMatch.Groups["user"].Value;
+        var password = addUserMatch.Groups["password"].Value;
+        var profile = addUserMatch.Groups["profile"].Value;
+
+        return new AddUser(user, password, profile);
+      }
+      var deleteUserMatch = deleteUser.Match(trimmedQuery);
+      if (deleteUserMatch.Success)
+      {
+        var user = deleteUserMatch.Groups["user"].Value;
+
+        return new DeleteUser(user);
+      }
 
       return null;
            
