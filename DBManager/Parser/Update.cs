@@ -19,10 +19,11 @@ namespace DbManager
 
         public string Execute(Database database)
         {
-            //TODO DEADLINE 3: Run the query and return the appropriate message
-            //UpdateSuccess or the last error in the database
+          //TODO DEADLINE 3: Run the query and return the appropriate message
+          //UpdateSuccess or the last error in the database
             
-            return null;
+          database.Update(Table, Columns, Where);
+          return database.LastErrorMessage;
             
         }
 

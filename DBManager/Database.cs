@@ -148,6 +148,7 @@ namespace DbManager
             if (table.GetColumn(i).Name == columnCondition.ColumnName)
             {
               table.DeleteWhere(columnCondition);
+              LastErrorMessage = Constants.DeleteSuccess;
               return true;
             }
           }
@@ -173,6 +174,7 @@ namespace DbManager
             if (table.GetColumn(i).Name == columnCondition.ColumnName)
             {
               table.Update(columnNames, columnCondition);
+              LastErrorMessage = Constants.UpdateSuccess;
               return true;
             }
           }
