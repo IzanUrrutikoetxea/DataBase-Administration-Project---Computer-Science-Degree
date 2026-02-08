@@ -41,10 +41,10 @@ namespace DbManager
       const string dropSecurityProfilePattern = @"^DROP\s+SECURITY\s+PROFILE\s+(?<profileName>\w+)$";
       var dropSecurityProfile = new Regex(dropSecurityProfilePattern, RegexOptions.None);
       //GRANT PrivilegeType ON TableName TO SecurityProfile
-      const string grantPattern = @"^GRANT\s+PrivilegeType\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
+      const string grantPattern = @"^GRANT\s+(?<privilegeName>[A-Z]+)\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
       var grant = new Regex(grantPattern, RegexOptions.None);
       //REVOKE PrivilegeType ON TableName TO SecurityProfile
-      const string revokePattern = @"^REVOKE\s+PrivilegeType\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
+      const string revokePattern = @"^REVOKE\s+(?<privilegeName>[A-Z]+)\s+ON\s+(?<table>[a-zA-Z]+)\s+TO\s+(?<profileName>\w+)$";
       var revoke = new Regex(revokePattern, RegexOptions.None);
       //ADD USER (User,Password,SecurityProfile)
       const string addUserPattern = @"^ADD\s+USER\s+\((?<user>\w+),(?<password>\w+),(?<profile>\w+)\)$""";
@@ -160,6 +160,7 @@ namespace DbManager
 
         return new CreateSecurityProfile(profileName);
       }
+
       var dropSecurityProfileMatch = dropSecurityProfile.Match(trimmedQuery);
       if (dropSecurityProfileMatch.Success)
       {
@@ -167,22 +168,29 @@ namespace DbManager
 
         return new DropSecurityProfile(profileName);
       }
+
       var grantMatch = grant.Match(trimmedQuery);
       if (grantMatch.Success)
       {
+        var privilegeName = grantMatch.Groups["privilegeName"].Value;
         var table = grantMatch.Groups["table"].Value;
         var profileName = grantMatch.Groups["profileName"].Value;
 
-        return new Grant(profileName, table, profileName);
+        if (privilegeName == "DELETE" || privilegeName == "INSERT" || privilegeName == "SELECT" || privilegeName == "UPDATE") return new Grant(privilegeName, table, profileName);
+        else return null;
       }
+
       var revokeMatch = revoke.Match(trimmedQuery);
       if (revokeMatch.Success)
       {
+        var privilegeName = revokeMatch.Groups["privilegeName"].Value;
         var table = revokeMatch.Groups["table"].Value;
         var profileName = revokeMatch.Groups["profileName"].Value;
 
-        return new Revoke(profileName, table, profileName);
+        if (privilegeName == "DELETE" || privilegeName == "INSERT" || privilegeName == "SELECT" || privilegeName == "UPDATE") return new Revoke(privilegeName, table, profileName);
+        else return null;
       }
+      
       var addUserMatch = addUser.Match(trimmedQuery);
       if (addUserMatch.Success)
       {
@@ -192,6 +200,7 @@ namespace DbManager
 
         return new AddUser(user, password, profile);
       }
+
       var deleteUserMatch = deleteUser.Match(trimmedQuery);
       if (deleteUserMatch.Success)
       {
