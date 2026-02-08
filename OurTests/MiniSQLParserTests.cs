@@ -57,7 +57,7 @@ namespace OurTests
     [InlineData("Select Age,Height,Name FROM TestTable WHERE Age=30")]
     [InlineData("SELECT Age,Height,Name from TestTable WHERE Age=30")]
     [InlineData("SELECT Age,Height,Name FROM TestTable wHERE Age=30")]
-    public void MiniSQLParser_Parse_ShouldReturnNull_ForIncorrectCapitalization(string query)
+    public void MiniSQLParser_Parse_Select_ShouldReturnNull_ForIncorrectCapitalization(string query)
     {
       //Assert
       Assert.Null(MiniSQLParser.Parse(query));
@@ -66,31 +66,106 @@ namespace OurTests
     [Theory]
     [InlineData("SELECT Age,Height,Name FROM TestTable1 WHERE Age=30")]
     [InlineData("SELECT Age,Height,Name FROM TestTable_ WHERE Age=30")]
-    public void MiniSQLParser_Parse_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
+    public void MiniSQLParser_Parse_Select_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
     {
       //Assert
       Assert.Null(MiniSQLParser.Parse(query));
     }
 
     [Fact]
-    public void MiniSQLParser_Parse_ShouldReturnNull_ForMissingTableName()
+    public void MiniSQLParser_Parse_Select_ShouldReturnNull_ForMissingTableName()
     {
       //Assert
       Assert.Null(MiniSQLParser.Parse("SELECT Age,Height,Name FROM  WHERE Age=30"));
     }
 
     [Fact]
-    public void MiniSQLParser_Parse_ShouldReturnNull_ForMissingCondition()
+    public void MiniSQLParser_Parse_Select_ShouldReturnNull_ForMissingCondition()
     {
       //Assert
       Assert.Null(MiniSQLParser.Parse("SELECT Age,Height,Name FROM TestTable WHERE "));
     }
 
     [Fact]
-    public void MiniSQLParser_Parse_ShouldReturnNull_ForMissingColumns()
+    public void MiniSQLParser_Parse_Select_ShouldReturnNull_ForMissingColumns()
     {
       //Assert
       Assert.Null(MiniSQLParser.Parse("SELECT  FROM TestTable WHERE Age=30"));
+    }
+    #endregion
+
+    #region Parse Insert Tests
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseInsertCorrectly()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var values = new List<string>() { "32", "137.24", "Paco" };
+      var expectedReturn = new Insert(tableName, values);
+
+      //Act
+      var result = MiniSQLParser.Parse("INSERT INTO TestTable VALUES 32,137.24,Paco");
+
+      //Assert
+      Assert.IsType<Insert>(result);
+
+      var insert = (Insert)result;
+
+      Assert.Equal(expectedReturn.Table, insert.Table);
+      Assert.Equal(expectedReturn.Values, insert.Values);
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseInsertCorrectlyWithSpaces()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var values = new List<string>() { "32", "137.24", "Paco" };
+      var expectedReturn = new Insert(tableName, values);
+
+      //Act
+      var result = MiniSQLParser.Parse("INSERT         INTO         TestTable            VALUES           32,137.24,Paco");
+
+      //Assert
+      Assert.IsType<Insert>(result);
+
+      var insert = (Insert)result;
+
+      Assert.Equal(expectedReturn.Table, insert.Table);
+      Assert.Equal(expectedReturn.Values, insert.Values);
+    }
+
+    [Theory]
+    [InlineData("insert into TestTable VALUES 32,137.24,Paco")]
+    [InlineData("INSERT INTO TestTable values 32,137.24,Paco")]
+    [InlineData("INSERT into TestTable VALUES 32,137.24,Paco")]
+    public void MiniSQLParser_Parse_Insert_ShouldReturnNull_ForIncorrectCapitalization(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Theory]
+    [InlineData("INSERT INTO TestTable1 VALUES 32,137.24,Paco")]
+    [InlineData("INSERT INTO TestTable_1 VALUES 32,137.24,Paco")]
+    public void MiniSQLParser_Parse_Insert_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_Insert_ShouldReturnNull_ForMissingTableName()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("INSERT INTO  VALUES 32,137.24,Paco"));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_Insert_ShouldReturnNull_ForMissingValues()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("INSERT INTO TestTable VALUES "));
     }
     #endregion
   }

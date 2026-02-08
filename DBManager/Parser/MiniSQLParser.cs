@@ -14,7 +14,7 @@ namespace DbManager
       const string selectPattern = @"^SELECT\s+(?<columns>[a-zA-Z,]+)\s+FROM\s+(?<table>[a-zA-Z]+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
       var select = new Regex(selectPattern, RegexOptions.None);
       //INSERT INTO TableName VALUES (LiteralValue[,LiteralValue, …])
-      const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s+(?<values>\w+)$"; ;
+      const string insertPattern = @"^INSERT\s+INTO\s+(?<table>[a-zA-Z]+)\s+VALUES\s+(?<values>[a-zA-Z0-9,.]+)$"; ;
       var insert = new Regex(insertPattern, RegexOptions.None);
       //DROP TABLE TableName
       const string dropTablePattern = @"^DROP\s+TABLE\s+(?<table>\w+)$";
@@ -75,7 +75,7 @@ namespace DbManager
       {
         var table = insertMatch.Groups["table"].Value;
 
-        var unsplittedValues = insertMatch.Groups["columns"].Value;
+        var unsplittedValues = insertMatch.Groups["values"].Value;
         var values = CommaSeparatedNames(unsplittedValues);
 
         return new Insert(table, values);
