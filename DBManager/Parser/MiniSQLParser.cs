@@ -31,20 +31,27 @@ namespace DbManager
       //DELETE FROM TableName WHERE Condition
       const string deletePattern = @"^DELETE\s+FROM\s+(?<table>[a-zA-Z]+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
       var deleteFrom = new Regex(deletePattern, RegexOptions.None);
-            
+
 
       //TODO DEADLINE 4
+      //CREATE SECURITY PROFILE SecurityProfile
       const string createSecurityProfilePattern = null;
-            
+      var createSecurityProfile = new Regex(createSecurityProfilePattern, RegexOptions.None);
+      //DROP SECURITY PROFILE SecurityProfile
       const string dropSecurityProfilePattern = null;
-            
+      var dropSecurityProfile = new Regex(dropSecurityProfilePattern, RegexOptions.None);
+      //GRANT PrivilegeType ON TableName TO SecurityProfile
       const string grantPattern = null;
-            
+      var grant = new Regex(grantPattern, RegexOptions.None);
+      //REVOKE PrivilegeType ON TableName TO SecurityProfile
       const string revokePattern = null;
-            
+      var revoke = new Regex(revokePattern, RegexOptions.None);
+      //ADD USER (User,Password,SecurityProfile)
       const string addUserPattern = null;
-            
+      var addUser = new Regex(addUserPattern, RegexOptions.None);
+      //DELETE USER User
       const string deleteUserPattern = null;
+      var deleteUser = new Regex(deleteUserPattern, RegexOptions.None);
 
 
       //TODO DEADLINE 2
