@@ -1,3 +1,5 @@
+using DbManager;
+
 namespace OurTests
 {
   public class DropTableTests
@@ -8,18 +10,31 @@ namespace OurTests
     {
       //Arrange
       var table = "TestTable";
-      var columns = new List<DbManager.ColumnDefinition>()
-      {
-        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.String, "Name")),
-        (new DbManager.ColumnDefinition(DbManager.ColumnDefinition.DataType.Int, "Age"))
-      };
 
       //Act
-      var createTable = new DbManager.CreateTable(table, columns);
+      var dropTable = new DbManager.DropTable(table);
 
       //Assert
-      Assert.Equal(table, createTable.Table);
-      Assert.Equal(columns, createTable.ColumnsParameters);
+      Assert.Equal(table, dropTable.Table);
+    }
+    #endregion
+
+    #region Execute tests
+    [Fact]
+    public void DropTable_Execute_ShouldWorkCorrectly()
+    {
+      //Arrange
+      var table = "TestTable";
+      var dropTable = new DbManager.DropTable(table);
+      var database = Database.CreateTestDatabase();
+
+      //Act
+      var result = dropTable.Execute(database);
+
+      //Assert
+      Assert.Equal(Constants.DropTableSuccess, result);
+      Assert.Null(database.TableByName(table));
+      
     }
     #endregion
   }
