@@ -433,5 +433,86 @@ namespace OurTests
       Assert.Null(MiniSQLParser.Parse("UPDATE TestTable SET Name=Paco,Age=22 WHERE "));
     }
     #endregion
+
+    #region Parse Delete Tests
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseDeleteCorrectly()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var condition = new Condition("Age", "=", "31");
+
+      var expectedReturn = new Delete(tableName, condition);
+
+      //Act
+      var result = MiniSQLParser.Parse("DELETE FROM TestTable WHERE Age=31");
+
+      //Assert
+      Assert.IsType<Delete>(result);
+
+      var delete = (Delete)result;
+
+      Assert.Equal(expectedReturn.Table, delete.Table);
+      Assert.Equal(expectedReturn.Where.Operator, delete.Where.Operator);
+      Assert.Equal(expectedReturn.Where.ColumnName, delete.Where.ColumnName);
+      Assert.Equal(expectedReturn.Where.LiteralValue, delete.Where.LiteralValue);
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseDeleteCorrectlyWithSpaces()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var condition = new Condition("Age", "=", "31");
+
+      var expectedReturn = new Delete(tableName, condition);
+
+      //Act
+      var result = MiniSQLParser.Parse("DELETE      FROM         TestTable    WHERE    Age=31");
+
+      //Assert
+      Assert.IsType<Delete>(result);
+
+      var delete = (Delete)result;
+
+      Assert.Equal(expectedReturn.Table, delete.Table);
+      Assert.Equal(expectedReturn.Where.Operator, delete.Where.Operator);
+      Assert.Equal(expectedReturn.Where.ColumnName, delete.Where.ColumnName);
+      Assert.Equal(expectedReturn.Where.LiteralValue, delete.Where.LiteralValue);
+    }
+
+    [Theory]
+    [InlineData("DELETE from TestTable WHERE Age=31")]
+    [InlineData("delete FROM TestTable WHERE Age=31")]
+    [InlineData("DELETE FROM TestTable where Age=31")]
+    public void MiniSQLParser_Parse_Delete_ShouldReturnNull_ForIncorrectCapitalization(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Theory]
+    [InlineData("DELETE FROM TestTable1 WHERE Age=31")]
+    [InlineData("DELETE FROM TestTable_1 WHERE Age=31")]
+    public void MiniSQLParser_Parse_Delete_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_Delete_ShouldReturnNull_ForMissingTableName()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("DELETE FROM  WHERE Age=31"));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_Delete_ShouldReturnNull_ForMissingCondition()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("DELETE FROM TestTable WHERE "));
+    }
+    #endregion
   }
 }

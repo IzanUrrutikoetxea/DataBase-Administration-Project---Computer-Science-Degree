@@ -29,7 +29,7 @@ namespace DbManager
       const string updateTablePattern = @"^UPDATE\s+(?<table>[a-zA-Z]+)\s+SET\s+(?<columns>[a-zA-Z0-9,=]+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
       var updateTable = new Regex(updateTablePattern, RegexOptions.None);
       //DELETE FROM TableName WHERE Condition
-      const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
+      const string deletePattern = @"^DELETE\s+FROM\s+(?<table>[a-zA-Z]+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
       var deleteFrom = new Regex(deletePattern, RegexOptions.None);
             
 
