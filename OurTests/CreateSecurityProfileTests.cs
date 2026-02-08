@@ -2,24 +2,20 @@ using DbManager;
 
 namespace OurTests
 {
-  public class AddUSerTests
+  public class CreateSecurityProfileTests
   {
     #region Constructor Tests
     [Fact]
-    public void AddUser_Constructor_ShouldInitializeAttributesCorrectly()
+    public void CreateSecurityProfile_Constructor_ShouldInitializeAttributesCorrectly()
     {
       //Arrange
-      var username = "admin";
-      var password = "admin";
       var profileName = "pepito";
 
       //Act
-      var addUser = new AddUser(username, password, profileName);
+      var createSecurityProfile = new CreateSecurityProfile(profileName);
 
       //Assert
-      Assert.Equal(username, addUser.Username);
-      Assert.Equal(password, addUser.Password);
-      Assert.Equal(profileName, addUser.ProfileName);
+      Assert.Equal(profileName, createSecurityProfile.ProfileName);
 
     }
     #endregion
