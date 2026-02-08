@@ -14,7 +14,7 @@ namespace DbManager
       const string selectPattern = @"^SELECT\s+(?<columns>[a-zA-Z,]+)\s+FROM\s+(?<table>[a-zA-Z]+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
       var select = new Regex(selectPattern, RegexOptions.None);
       //INSERT INTO TableName VALUES (LiteralValue[,LiteralValue, …])
-      const string insertPattern = @"^INSERT\s+INTO\s+(?<table>[a-zA-Z]+)\s+VALUES\s+(?<values>[a-zA-Z0-9,.]+)$"; ;
+      const string insertPattern = @"^INSERT\s+INTO\s+(?<table>[a-zA-Z]+)\s+VALUES\s+\((?<values>[a-zA-Z0-9,.]+)\)$"; ;
       var insert = new Regex(insertPattern, RegexOptions.None);
       //DROP TABLE TableName
       const string dropTablePattern = @"^DROP\s+TABLE\s+(?<table>[a-zA-Z]+)$";
@@ -23,7 +23,7 @@ namespace DbManager
       //Note: The parsing of CREATE TABLE should accept empty columns "()"
       //And then, an execution error should be given if a CreateTable without columns is executed
       //CREATE TABLE TableName (ColumnName DataType[,ColumnName DataType... ])
-      const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>\w+)\s+(?<columns>\w+)$";
+      const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z]+)(\s+\((?<columns>[a-zA-Z0-9,. ]+)\))?$";
       var createTable = new Regex(createTablePattern, RegexOptions.None);
       //UPDATE TableName SET ColumnName=LiteralValue[,ColumnName=LiteralValue,…] WHERE Condition  
       const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<columns>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";

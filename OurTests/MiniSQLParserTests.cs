@@ -104,7 +104,7 @@ namespace OurTests
       var expectedReturn = new Insert(tableName, values);
 
       //Act
-      var result = MiniSQLParser.Parse("INSERT INTO TestTable VALUES 32,137.24,Paco");
+      var result = MiniSQLParser.Parse("INSERT INTO TestTable VALUES (32,137.24,Paco)");
 
       //Assert
       Assert.IsType<Insert>(result);
@@ -124,7 +124,7 @@ namespace OurTests
       var expectedReturn = new Insert(tableName, values);
 
       //Act
-      var result = MiniSQLParser.Parse("INSERT         INTO         TestTable            VALUES           32,137.24,Paco");
+      var result = MiniSQLParser.Parse("INSERT         INTO         TestTable            VALUES           (32,137.24,Paco)");
 
       //Assert
       Assert.IsType<Insert>(result);
@@ -136,9 +136,9 @@ namespace OurTests
     }
 
     [Theory]
-    [InlineData("insert into TestTable VALUES 32,137.24,Paco")]
-    [InlineData("INSERT INTO TestTable values 32,137.24,Paco")]
-    [InlineData("INSERT into TestTable VALUES 32,137.24,Paco")]
+    [InlineData("insert into TestTable VALUES (32,137.24,Paco)")]
+    [InlineData("INSERT INTO TestTable values (32,137.24,Paco)")]
+    [InlineData("INSERT into TestTable VALUES (32,137.24,Paco)")]
     public void MiniSQLParser_Parse_Insert_ShouldReturnNull_ForIncorrectCapitalization(string query)
     {
       //Assert
@@ -146,8 +146,8 @@ namespace OurTests
     }
 
     [Theory]
-    [InlineData("INSERT INTO TestTable1 VALUES 32,137.24,Paco")]
-    [InlineData("INSERT INTO TestTable_1 VALUES 32,137.24,Paco")]
+    [InlineData("INSERT INTO TestTable1 VALUES (32,137.24,Paco)")]
+    [InlineData("INSERT INTO TestTable_1 VALUES (32,137.24,Paco)")]
     public void MiniSQLParser_Parse_Insert_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
     {
       //Assert
@@ -158,7 +158,7 @@ namespace OurTests
     public void MiniSQLParser_Parse_Insert_ShouldReturnNull_ForMissingTableName()
     {
       //Assert
-      Assert.Null(MiniSQLParser.Parse("INSERT INTO  VALUES 32,137.24,Paco"));
+      Assert.Null(MiniSQLParser.Parse("INSERT INTO  VALUES (32,137.24,Paco)"));
     }
 
     [Fact]
@@ -230,6 +230,104 @@ namespace OurTests
     {
       //Assert
       Assert.Null(MiniSQLParser.Parse("DROP TABLE "));
+    }
+    #endregion
+
+    #region Parse Create Table Tests
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseCreateTableCorrectly()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var columns = new List<ColumnDefinition>()
+      {
+        (new ColumnDefinition(ColumnDefinition.DataType.String, "Name")),
+        (new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"))
+      };
+      var expectedReturn = new CreateTable(tableName, columns);
+
+      //Act
+      var result = MiniSQLParser.Parse("CREATE TABLE TestTable (Name String,Age Int)");
+
+      //Assert
+      Assert.IsType<CreateTable>(result);
+
+      var createTable = (CreateTable)result;
+
+      Assert.Equal(expectedReturn.Table, createTable.Table);
+      Assert.Equal(expectedReturn.ColumnsParameters.Count, createTable.ColumnsParameters.Count);
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseCreateTableCorrectlyWithSpaces()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var columns = new List<ColumnDefinition>()
+      {
+        (new ColumnDefinition(ColumnDefinition.DataType.String, "Name")),
+        (new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"))
+      };
+      var expectedReturn = new CreateTable(tableName, columns);
+
+      //Act
+      var result = MiniSQLParser.Parse("CREATE               TABLE    TestTable              (Name String,Age Int)");
+
+      //Assert
+      Assert.IsType<CreateTable>(result);
+
+      var createTable = (CreateTable)result;
+
+      Assert.Equal(expectedReturn.Table, createTable.Table);
+      Assert.Equal(expectedReturn.ColumnsParameters.Count, createTable.ColumnsParameters.Count);
+    }
+
+    [Theory]
+    [InlineData("create TABLE TestTable (Name String,Age Int)")]
+    [InlineData("CREATE table TestTable (Name String,Age Int)")]
+    [InlineData("CREATE tABLE TestTable (Name String,Age Int)")]
+    public void MiniSQLParser_Parse_CreateTable_ShouldReturnNull_ForIncorrectCapitalization(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Theory]
+    [InlineData("CREATE TABLE TestTable1 (Name String,Age Int)")]
+    [InlineData("CREATE TABLE TestTable_1 (Name String,Age Int)")]
+    public void MiniSQLParser_Parse_CreateTable_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_CreateTable_ShouldReturnNull_ForMissingTableName()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("CREATE TABLE  (Name String,Age Int)"));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_CreateTable_ShouldNotReturnNull_ForMissingValues()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var columns = new List<ColumnDefinition>()
+      {
+      };
+      var expectedReturn = new CreateTable(tableName, columns);
+
+      //Act
+      var result = MiniSQLParser.Parse("CREATE TABLE TestTable");
+
+      //Assert
+      Assert.IsType<CreateTable>(result);
+
+      var createTable = (CreateTable)result;
+
+      Assert.Equal(expectedReturn.Table, createTable.Table);
+      Assert.Equal(expectedReturn.ColumnsParameters, createTable.ColumnsParameters);
     }
     #endregion
   }
