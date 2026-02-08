@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Xml.Linq;
 using DbManager;
+using DbManager.Parser;
 
 namespace OurTests
 {
@@ -328,6 +331,106 @@ namespace OurTests
 
       Assert.Equal(expectedReturn.Table, createTable.Table);
       Assert.Equal(expectedReturn.ColumnsParameters, createTable.ColumnsParameters);
+    }
+    #endregion
+
+    #region Parse Update Tests
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseUpdateCorrectly()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var values = new List<SetValue>()
+      {
+        (new SetValue("Name", "Paco")),
+        (new SetValue("Age", "22"))
+      };
+      var condition = new Condition("Age", "=", "31");
+
+      var expectedReturn = new Update(tableName, values, condition);
+
+      //Act
+      var result = MiniSQLParser.Parse("UPDATE TestTable SET Name=Paco,Age=22 WHERE Age=31");
+
+      //Assert
+      Assert.IsType<Update>(result);
+
+      var update = (Update)result;
+
+      Assert.Equal(expectedReturn.Table, update.Table);
+      Assert.Equal(expectedReturn.Columns.Count, update.Columns.Count);
+      Assert.Equal(expectedReturn.Where.Operator, update.Where.Operator);
+      Assert.Equal(expectedReturn.Where.ColumnName, update.Where.ColumnName);
+      Assert.Equal(expectedReturn.Where.LiteralValue, update.Where.LiteralValue);
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_ShouldParseUpdateCorrectlyWithSpaces()
+    {
+      //Arrange
+      var tableName = "TestTable";
+      var values = new List<SetValue>()
+      {
+        (new SetValue("Name", "Paco")),
+        (new SetValue("Age", "22"))
+      };
+      var condition = new Condition("Age", "=", "31");
+
+      var expectedReturn = new Update(tableName, values, condition);
+
+      //Act
+      var result = MiniSQLParser.Parse("UPDATE      TestTable    SET         Name=Paco,Age=22      WHERE    Age=31");
+
+      //Assert
+      Assert.IsType<Update>(result);
+
+      var update = (Update)result;
+
+      Assert.Equal(expectedReturn.Table, update.Table);
+      Assert.Equal(expectedReturn.Columns.Count, update.Columns.Count);
+      Assert.Equal(expectedReturn.Where.Operator, update.Where.Operator);
+      Assert.Equal(expectedReturn.Where.ColumnName, update.Where.ColumnName);
+      Assert.Equal(expectedReturn.Where.LiteralValue, update.Where.LiteralValue);
+    }
+
+    [Theory]
+    [InlineData("update TestTable SET Name = Paco, Age = 22 WHERE Age = 31")]
+    [InlineData("UPDATE TestTable set Name=Paco,Age=22 WHERE Age=31")]
+    [InlineData("UPDATE TestTable SET Name=Paco,Age=22 where Age=31")]
+    public void MiniSQLParser_Parse_Update_ShouldReturnNull_ForIncorrectCapitalization(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Theory]
+    [InlineData("UPDATE TestTabl1 SET Name=Paco,Age=22 WHERE Age=31")]
+    [InlineData("UPDATE TestTable_1 SET Name=Paco,Age=22 WHERE Age=31")]
+    public void MiniSQLParser_Parse_Update_ShouldReturnNull_ForIncorrectTableNameWithForbiddenChars(string query)
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse(query));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_Update_ShouldReturnNull_ForMissingTableName()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("UPDATE  SET Name=Paco,Age=22 WHERE Age=31"));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_Update_ShouldReturnNull_ForMissingSetValues()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("UPDATE TestTable SET  WHERE Age=31"));
+    }
+
+    [Fact]
+    public void MiniSQLParser_Parse_Update_ShouldReturnNull_ForMissingCondition()
+    {
+      //Assert
+      Assert.Null(MiniSQLParser.Parse("UPDATE TestTable SET Name=Paco,Age=22 WHERE "));
     }
     #endregion
   }

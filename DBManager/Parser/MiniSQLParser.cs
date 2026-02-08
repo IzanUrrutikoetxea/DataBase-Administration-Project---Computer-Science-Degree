@@ -26,7 +26,7 @@ namespace DbManager
       const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z]+)(\s+\((?<columns>[a-zA-Z0-9,. ]+)\))?$";
       var createTable = new Regex(createTablePattern, RegexOptions.None);
       //UPDATE TableName SET ColumnName=LiteralValue[,ColumnName=LiteralValue,…] WHERE Condition  
-      const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<columns>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
+      const string updateTablePattern = @"^UPDATE\s+(?<table>[a-zA-Z]+)\s+SET\s+(?<columns>[a-zA-Z0-9,=]+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
       var updateTable = new Regex(updateTablePattern, RegexOptions.None);
       //DELETE FROM TableName WHERE Condition
       const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<column>\w+)\s?(?<operator>[<=>])\s?(?<value>.+)$";
