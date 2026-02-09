@@ -27,7 +27,9 @@ namespace DbManager
     public Database(string adminUsername, string adminPassword)
     {
       //DEADLINE 1.B: Initalize the member variables
-            
+      var user = new User(adminUsername, adminPassword);
+      //Profile.Users.Add(user);
+      m_username = adminUsername;
     }
 
     public bool AddTable(Table table)
