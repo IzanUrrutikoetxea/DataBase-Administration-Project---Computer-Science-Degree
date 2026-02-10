@@ -61,7 +61,7 @@ namespace DbManager.Network
     public bool Open(string database, string username, string password, out string error)
     {
       //DEADLINE 6: Send an Open command to the server using SendString
-      error = SendString(XmlSerializer.OpenDatabase(database, username, password));
+      XmlDeserializer.ParseOpenCreateAnswer(SendString(XmlSerializer.OpenDatabase(database, username, password)), out error);
       return false;
             
     }
@@ -70,7 +70,7 @@ namespace DbManager.Network
     {
       //DEADLINE 6: Send a Create command to the server using SendString
 
-      error = SendString(XmlSerializer.CreateDatabase(database, username, password));
+      XmlDeserializer.ParseOpenCreateAnswer(SendString(XmlSerializer.CreateDatabase(database, username, password)), out error);
       return false;
             
     }
@@ -78,8 +78,10 @@ namespace DbManager.Network
     public string SendQuery(string query)
     {
       //DEADLINE 6: Send a Query command to the server using SendString
-      
-      return SendString(query);
+      string answer = null;
+
+      XmlDeserializer.ParseQueryAnswer(SendString(query), out answer);
+      return answer;
             
     }
 
