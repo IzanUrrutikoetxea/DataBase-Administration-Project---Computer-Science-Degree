@@ -18,7 +18,7 @@ namespace DbManager.Network
       //DEADLINE 6: Implement the server as specified (eGela)
       //Have a look at the project ServerConsole to see how a TcpListener is used
       //Use XmlSerializer to create Xml commands
-
+       
       try
       {
         DbManager.Database serverDatabase = new Database("admin", "adminPassword");
