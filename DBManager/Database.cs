@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DbManager.Parser;
 using DbManager.Security;
@@ -190,22 +191,80 @@ namespace DbManager
         
     public bool Save(string databaseName)
     {
-    //DEADLINE 1.C: Save this database to disk with the given name
-    //If everything goes ok, return true, false otherwise.
-    //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
-            
-    return false;
-            
+      //DEADLINE 1.C: Save this database to disk with the given name
+      //If everything goes ok, return true, false otherwise.
+      //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
+      try
+      {
+        var writer = System.IO.File.CreateText(databaseName);
+        foreach (var table in Tables)
+        {
+          writer.WriteLine(table.Name);
+          writer.WriteLine(table.ToString());
+        }
+        writer.Close();
+        return true;
+      }
+
+      catch (Exception)
+      {
+        return false;
+      }
     }
 
     public static Database Load(string databaseName, string username, string password)
     {
-    //DEADLINE 1.C: Load the (previously saved) database of name databaseName
-    //If everything goes ok, return the loaded database (a new instance), null otherwise.
-    //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
-    //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
-            
-    return null;
+      //DEADLINE 1.C: Load the (previously saved) database of name databaseName
+      //If everything goes ok, return the loaded database (a new instance), null otherwise.
+      //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
+      //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
+      var reader = System.IO.File.OpenText(databaseName);
+      string line = reader.ReadLine();
+      var database = new Database();
+      while (line != null)
+      {
+        string name = line;
+        line = reader.ReadLine();
+        int startCols = line.IndexOf('[');
+        int endCols = line.IndexOf(']');
+
+        string columns = line.Substring(startCols + 1, endCols - startCols - 1);
+
+        var columnNames = columns
+          .Split(',', StringSplitOptions.RemoveEmptyEntries)
+          .Select(c => c.Trim('\''))
+          .ToList();
+
+        var columnDefinitions = new List<ColumnDefinition>();
+
+        foreach (var column in columnNames)
+        {
+          //ASK TO THE TEACHER HOW ARE WE SUPOSED TO SAVE THE COLUMNDEFINITION TYPE - SAVE = NEW TO STRING VERSION OR CHANGE TOSTRING()
+          columnDefinitions.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, column));
+        }
+
+        var table = new Table(name, columnDefinitions);
+
+        string rows = line.Substring(endCols + 1);
+
+        var rowValues = rows
+          .Split("}{", StringSplitOptions.RemoveEmptyEntries)
+          .Select(r => r.Trim('{', '}'));
+
+        foreach (var rowValue in rowValues)
+        {
+          var values = rowValue
+            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(v => v.Trim('\''))
+            .ToList();
+          
+          var row = new Row(columnDefinitions, values);
+
+          table.AddRow(row);
+        }
+        database.AddTable(table);
+      }
+      return database;
     }
 
     public string ExecuteMiniSQLQuery(string query)
