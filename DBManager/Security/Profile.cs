@@ -11,7 +11,7 @@ namespace DbManager.Security
     public const string AdminProfileName = "Admin";
     public string Name { get; set; }
     public List<User> Users { get; set; } = new List<User>();
-
+    //ASK TEACHER IF THE STRING OF THE DICTIONARY ARE TABLES OR DATABASES
     public Dictionary<string, List<Privilege>> PrivilegesOn { get; private set; } = new Dictionary<string, List<Privilege>>();
 
     public bool GrantPrivilege(string table, Privilege privilege)

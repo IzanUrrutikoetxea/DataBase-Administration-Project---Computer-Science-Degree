@@ -5,24 +5,39 @@ using DbManager.Parser;
 
 namespace DbManager
 {
- 
-    public class DropSecurityProfile : MiniSqlQuery
+
+  public class DropSecurityProfile : MiniSqlQuery
+  {
+    public string ProfileName { get; set; }
+
+    public DropSecurityProfile(string profileName)
     {
-        public string ProfileName { get; set; }
-
-        public DropSecurityProfile(string profileName)
-        {
-            //TODO DEADLINE 4: Initialize member variables
-            ProfileName = profileName;
-        }
-        public string Execute(Database database)
-        {
-            //TODO DEADLINE 5: Run the query and return the appropriate message
-            //UsersProfileIsNotGrantedRequiredPrivilege, SecurityProfileDoesNotExistError, DropSecurityProfileSuccess
-            
-            return null;
-            
-        }
-
+      //TODO DEADLINE 4: Initialize member variables
+      ProfileName = profileName;
     }
+    public string Execute(Database database)
+    {
+      //TODO DEADLINE 5: Run the query and return the appropriate message
+      //UsersProfileIsNotGrantedRequiredPrivilege, SecurityProfileDoesNotExistError, DropSecurityProfileSuccess
+      var profile = database.SecurityManager.ProfileByName(ProfileName);
+
+      if (profile != null)
+      {
+        //ASK TEACHER HOW CAN I CHECK HERE IF UsersProfileIsNotGrantedRequiredPrivilege WHEN I ONLY HAVE THE DATABASE AND NOT THE TABLE
+        //if (profile.IsGrantedPrivilege(table ?, Security.Privilege.Insert))
+        //{
+        foreach (var profileDatabase in database.SecurityManager.Profiles)
+        {
+          if (profileDatabase.Name == ProfileName)
+          {
+            database.SecurityManager.Profiles.Remove(profileDatabase);
+            return Constants.DropSecurityProfileSuccess;
+          }
+        }
+        //}
+        //return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+      }
+      return Constants.SecurityProfileDoesNotExistError;
+    }
+  }
 }
