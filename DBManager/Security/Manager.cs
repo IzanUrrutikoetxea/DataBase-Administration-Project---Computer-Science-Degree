@@ -43,73 +43,124 @@ namespace DbManager.Security
     {
       //TODO DEADLINE 5: Add this privilege on this table to the profile with this name
       //If the profile or the table don't exist, do nothing 
-
+      foreach(var profile in Profiles)
+      {
+        if (profile.Name == profileName)
+        {
+          profile.GrantPrivilege(table, privilege);
+        }
+      }
     }
 
     public void RevokePrivilege(string profileName, string table, Privilege privilege)
     {
-    //TODO DEADLINE 5: Remove this privilege on this table to the profile with this name
-    //If the profile or the table don't exist, do nothing
-            
+      //TODO DEADLINE 5: Remove this privilege on this table to the profile with this name
+      //If the profile or the table don't exist, do nothing
+      foreach (var profile in Profiles)
+      {
+        if (profile.Name == profileName)
+        {
+          profile.RevokePrivilege(table, privilege);
+        }
+      }
     }
 
     public bool IsGrantedPrivilege(string username, string table, Privilege privilege)
     {
-    //TODO DEADLINE 5: Return true if the username has this privilege on this table. False otherwise (also in case of error)
-            
-    return false;
-            
+      //TODO DEADLINE 5: Return true if the username has this privilege on this table. False otherwise (also in case of error)
+      try
+      {
+        foreach (var profile in Profiles)
+        {
+          foreach (var user in profile.Users)
+          {
+            if (user.Username == username)
+            {
+              return profile.IsGrantedPrivilege(table, privilege);
+            }
+          }
+        }
+        return false;
+      }
+      catch
+      {
+        return false;
+      }
     }
 
     public void AddProfile(Profile profile)
     {
-    //TODO DEADLINE 5: Add this profile
-            
+      //TODO DEADLINE 5: Add this profile
+      Profiles.Add(profile);
     }
 
     public User UserByName(string username)
     {
-    //TODO DEADLINE 5: Return the user by name. If it doesn't exist, return null
-            
-    return null;
-            
+      //TODO DEADLINE 5: Return the user by name. If it doesn't exist, return null
+      foreach (var profile in Profiles)
+      {
+        foreach (var user in profile.Users)
+        {
+          if (user.Username == username)
+          {
+            return user;
+          }
+        }
+      }
+      return null;
     }
 
     public Profile ProfileByName(string profileName)
     {
-    //TODO DEADLINE 5: Return the profile by name. If it doesn't exist, return null
-            
-    return null;
-            
+      //TODO DEADLINE 5: Return the profile by name. If it doesn't exist, return null
+      foreach (var profile in Profiles)
+      {
+        if (profile.Name == profileName)
+        {
+          return profile;
+        }
+      }
+      return null;
     }
 
     public Profile ProfileByUser(string username)
     {
-    //TODO DEADLINE 5: Return the profile by user. If the user doesn't exist, return null
-            
-    return null;
-            
+      //TODO DEADLINE 5: Return the profile by user. If the user doesn't exist, return null
+      foreach (var profile in Profiles)
+      {
+        foreach (var user in profile.Users)
+        {
+          if (user.Username == username)
+          {
+            return profile;
+          }
+        }
+      }
+      return null;
     }
 
     public bool RemoveProfile(string profileName)
     {
-    //TODO DEADLINE 5: Remove this profile
-            
-    return false;
+      //TODO DEADLINE 5: Remove this profile
+      if (ProfileByName(profileName) != null)
+      {
+        Profiles.Remove(ProfileByName(profileName));
+        return true;
+      }
+      return false;
     }
 
     public static Manager Load(string databaseName, string username)
     {
-    //TODO DEADLINE 5: Load all the profiles and users saved for this database. The Manager instance should be created with the given username
+      //TODO DEADLINE 5: Load all the profiles and users saved for this database. The Manager instance should be created with the given username
             
-    return null;
-            
+      return null;
     }
 
     public void Save(string databaseName)
     {
-    //TODO DEADLINE 5: Save all the profiles and users/passwords created for this database.
-            
+      //TODO DEADLINE 5: Save all the profiles and users/passwords created for this database.
+      
     }
   }
 }
