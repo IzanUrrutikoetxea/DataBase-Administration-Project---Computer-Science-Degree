@@ -694,20 +694,21 @@ namespace OurTests
       //Assert
       Assert.NotEmpty(lines);
       Assert.Equal(1, database.SecurityManager.Profiles.Count);
-      Assert.Equal(9, lines.Length);
+      Assert.Equal(11, lines.Length);
       Assert.Equal("TestTable", lines[0]);
       Assert.Equal("String,Double,Int", lines[1]);
       Assert.Contains("['Name','Height','Age']", lines[2]);
       Assert.Contains("Rodolfo", lines[2]);
       Assert.Contains("Maider", lines[2]);
       Assert.Contains("Pepe", lines[2]);
-      Assert.Contains("MANAGER", lines[3]);
-      Assert.Contains("Engineers", lines[4]);
-      Assert.Contains(Database.AdminUsername, lines[5]);
-      Assert.Contains(DbManager.Security.Encryption.Encrypt(Database.AdminPassword), lines[6]);
-      Assert.Contains("TestTable", lines[7]);
-      Assert.Contains("Select", lines[8]);
-      Assert.Contains("Update", lines[8]);
+      Assert.Contains("USER", lines[3]);
+      Assert.Contains("MANAGER", lines[5]);
+      Assert.Contains("Engineers", lines[6]);
+      Assert.Contains(Database.AdminUsername, lines[7]);
+      Assert.Contains(DbManager.Security.Encryption.Encrypt(Database.AdminPassword), lines[8]);
+      Assert.Contains("TestTable", lines[9]);
+      Assert.Contains("Select", lines[10]);
+      Assert.Contains("Update", lines[10]);
     }
     #endregion
 
@@ -716,7 +717,18 @@ namespace OurTests
     public void Database_Load_ShoulLoadCorrectlyAllData()
     {
       //Arrange
+      var user = new DbManager.Security.User(Database.AdminUsername, Database.AdminPassword);
+      var profile = new DbManager.Security.Profile();
+      profile.Users.Add(user);
+      profile.Name = "Engineers";
+      profile.PrivilegesOn.Add("TestTable", new List<DbManager.Security.Privilege>
+      {
+        DbManager.Security.Privilege.Select,
+        DbManager.Security.Privilege.Update
+      });
+
       var database = Database.CreateTestDatabase();
+      database.SecurityManager.AddProfile(profile);
       var fileName = "test_db_load.txt";
 
       if (File.Exists(fileName)) File.Delete(fileName);
@@ -741,6 +753,22 @@ namespace OurTests
 
       Assert.Equal("Maider", table.GetRow(1).Values[0]);
       Assert.Equal("Pepe", table.GetRow(2).Values[0]);
+
+      var manager = resultDatabase.SecurityManager;
+
+      Assert.NotNull(manager);
+      Assert.Equal(1, manager.Profiles.Count);
+
+      var profileResult = manager.Profiles[0];
+      Assert.Equal(1, profileResult.Users.Count);
+
+      var userResult = profileResult.Users[0];
+      Assert.Equal(Database.AdminUsername, userResult.Username);
+
+      Assert.True(profile.IsGrantedPrivilege("TestTable", DbManager.Security.Privilege.Select));
+      Assert.True(profile.IsGrantedPrivilege("TestTable", DbManager.Security.Privilege.Update));
+      Assert.False(profile.IsGrantedPrivilege("TestTable", DbManager.Security.Privilege.Delete));
+
     }
     #endregion
   }

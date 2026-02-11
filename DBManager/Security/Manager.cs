@@ -151,11 +151,45 @@ namespace DbManager.Security
       return false;
     }
 
-    public static Manager Load(string databaseName, string username)
+    public static Manager Load(StreamReader reader, string username)
     {
       //TODO DEADLINE 5: Load all the profiles and users saved for this database. The Manager instance should be created with the given username
-            
-      return null;
+      var manager = new Manager(username);
+      var line = reader.ReadLine();
+      while (line != null)
+      {
+        var profile = new Profile();
+        profile.Name = line;
+        line = reader.ReadLine();
+        var usernames = line.Split(";");
+        line = reader.ReadLine();
+        var passwords = line.Split(";");
+        for (int i = 0; i < usernames.Length; i++)
+        {
+          var user = new User(usernames[i], passwords[i]);
+          profile.Users.Add(user);
+        }
+        line = reader.ReadLine();
+        var tables = line.Split(",");
+        line = reader.ReadLine();
+        var privilegesGroup = line.Split(";");
+        for (int i=0; i < tables.Length; i++)
+        {
+          var privilegeArray = privilegesGroup[i].Split(",");
+          var privilegeList = new List<Privilege>();
+          foreach (var privilege in privilegeArray)
+          {
+            if (privilege == "Select") privilegeList.Add(Privilege.Select);
+            else if (privilege == "Update") privilegeList.Add(Privilege.Update);
+            else if (privilege == "Insert") privilegeList.Add(Privilege.Insert);
+            else if (privilege == "Delete") privilegeList.Add(Privilege.Delete);
+          }
+          profile.PrivilegesOn.Add(tables[i], privilegeList);
+        }
+        manager.AddProfile(profile);
+        line = reader.ReadLine();
+      }
+      return manager;
     }
 
     public void Save(StreamWriter writer)

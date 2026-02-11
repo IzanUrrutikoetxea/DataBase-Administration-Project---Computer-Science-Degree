@@ -208,14 +208,15 @@ namespace DbManager
             writer.WriteLine(table.ColumnTypesToString());
             writer.WriteLine(table.ToString());
           }
+          writer.WriteLine("USER");
+          writer.WriteLine(m_username);
           writer.WriteLine("MANAGER");
           SecurityManager.Save(writer);
         }
         return true;
       }
-      catch (Exception ex)
+      catch
       {
-        throw;
         return false;
       }
     }
@@ -229,7 +230,7 @@ namespace DbManager
       var reader = System.IO.File.OpenText(databaseName);
       string line = reader.ReadLine();
       var database = new Database();
-      while (line != "MANAGER")
+      while (line != "USER")
       {
         string name = line;
         line = reader.ReadLine();
@@ -282,6 +283,9 @@ namespace DbManager
         database.AddTable(table);
         line = reader.ReadLine();
       }
+      var m_username = reader.ReadLine();
+      var managerText = reader.ReadLine();
+      database.SecurityManager = Manager.Load(reader, m_username);
       return database;
     }
 
