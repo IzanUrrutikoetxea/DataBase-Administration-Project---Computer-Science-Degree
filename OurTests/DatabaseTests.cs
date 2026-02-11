@@ -3,7 +3,7 @@ using DbManager;
 
 namespace OurTests
 {
-  public class UnitTest1
+  public class DatabaseTests
   {
     #region AddTable Tests
     [Fact]
@@ -643,7 +643,19 @@ namespace OurTests
     public void Database_Save_ShouldCreateAFileWithDatabaseName()
     {
       //Arrange
+      var user = new DbManager.Security.User(Database.AdminUsername, Database.AdminPassword);
+      var profile = new DbManager.Security.Profile();
+      profile.Users.Add(user);
+      profile.Name = "Engineers";
+      profile.PrivilegesOn.Add("TestTable",new List<DbManager.Security.Privilege>
+      {
+        DbManager.Security.Privilege.Select,
+        DbManager.Security.Privilege.Update
+      });
+
+
       var database = Database.CreateTestDatabase();
+      database.SecurityManager.AddProfile(profile);
       var fileName = "TestTable.txt";
 
       if (File.Exists(fileName)) File.Delete(fileName);
@@ -659,7 +671,18 @@ namespace OurTests
     public void Database_Save_ShouldCorrectlySaveAllData()
     {
       //Arrange
+      var user = new DbManager.Security.User(Database.AdminUsername, Database.AdminPassword);
+      var profile = new DbManager.Security.Profile();
+      profile.Users.Add(user);
+      profile.Name = "Engineers";
+      profile.PrivilegesOn.Add("TestTable", new List<DbManager.Security.Privilege>
+      {
+        DbManager.Security.Privilege.Select,
+        DbManager.Security.Privilege.Update
+      });
+
       var database = Database.CreateTestDatabase();
+      database.SecurityManager.AddProfile(profile);
       var fileName = "TestTable.txt";
 
       if (File.Exists(fileName)) File.Delete(fileName);
@@ -670,12 +693,21 @@ namespace OurTests
 
       //Assert
       Assert.NotEmpty(lines);
+      Assert.Equal(1, database.SecurityManager.Profiles.Count);
+      Assert.Equal(9, lines.Length);
       Assert.Equal("TestTable", lines[0]);
       Assert.Equal("String,Double,Int", lines[1]);
       Assert.Contains("['Name','Height','Age']", lines[2]);
       Assert.Contains("Rodolfo", lines[2]);
       Assert.Contains("Maider", lines[2]);
       Assert.Contains("Pepe", lines[2]);
+      Assert.Contains("MANAGER", lines[3]);
+      Assert.Contains("Engineers", lines[4]);
+      Assert.Contains(Database.AdminUsername, lines[5]);
+      Assert.Contains(DbManager.Security.Encryption.Encrypt(Database.AdminPassword), lines[6]);
+      Assert.Contains("TestTable", lines[7]);
+      Assert.Contains("Select", lines[8]);
+      Assert.Contains("Update", lines[8]);
     }
     #endregion
 

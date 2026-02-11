@@ -29,11 +29,12 @@ namespace DbManager
     {
       //DEADLINE 1.B: Initalize the member variables
       //ASK TO THE TEACHER HOW IS THIS SUPOSSED TO WORK
+      m_username = adminUsername;
       SecurityManager = new Manager(m_username);
-      var profile = new Profile();
-      var user = new User(adminUsername, adminPassword);
-      profile.Users.Add(user);
-      SecurityManager.AddProfile(profile);
+      //var profile = new Profile();
+      //var user = new User(adminUsername, adminPassword);
+      //profile.Users.Add(user);
+      //SecurityManager.AddProfile(profile);
     }
 
     public bool AddTable(Table table)
@@ -199,19 +200,22 @@ namespace DbManager
       //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
       try
       {
-        var writer = System.IO.File.CreateText(databaseName);
-        foreach (var table in Tables)
+        using (var writer = File.CreateText(databaseName))
         {
-          writer.WriteLine(table.Name);
-          writer.WriteLine(table.ColumnTypesToString());
-          writer.WriteLine(table.ToString());
+          foreach (var table in Tables)
+          {
+            writer.WriteLine(table.Name);
+            writer.WriteLine(table.ColumnTypesToString());
+            writer.WriteLine(table.ToString());
+          }
+          writer.WriteLine("MANAGER");
+          SecurityManager.Save(writer);
         }
-        writer.Close();
         return true;
       }
-
-      catch (Exception)
+      catch (Exception ex)
       {
+        throw;
         return false;
       }
     }
@@ -225,7 +229,7 @@ namespace DbManager
       var reader = System.IO.File.OpenText(databaseName);
       string line = reader.ReadLine();
       var database = new Database();
-      while (line != null)
+      while (line != "MANAGER")
       {
         string name = line;
         line = reader.ReadLine();

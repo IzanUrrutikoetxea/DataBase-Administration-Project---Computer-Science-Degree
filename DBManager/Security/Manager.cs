@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -157,10 +158,34 @@ namespace DbManager.Security
       return null;
     }
 
-    public void Save(string databaseName)
+    public void Save(StreamWriter writer)
     {
       //TODO DEADLINE 5: Save all the profiles and users/passwords created for this database.
-      
+      foreach(var profile in Profiles)
+      {
+        //Profile-name
+        writer.WriteLine(profile.Name);
+        //Users
+        var usernameLine = "";
+        var passwordLine = "";
+        for (int i = 0; i < profile.Users.Count; i++)
+        {
+          if (i == profile.Users.Count - 1) usernameLine += profile.Users[i].Username;
+          else usernameLine += profile.Users[i].Username + ",";
+        }
+        for (int i = 0; i < profile.Users.Count; i++)
+        {
+          if (i == profile.Users.Count - 1) passwordLine += profile.Users[i].EncryptedPassword;
+          else passwordLine += profile.Users[i].EncryptedPassword + ",";
+        }
+        writer.WriteLine(usernameLine);
+        writer.WriteLine(passwordLine);
+        //Dictionary
+        var dictionary = profile.PrivilegesToString();
+        writer.WriteLine(dictionary[0]);
+        writer.WriteLine(dictionary[1]);
+      }
+      writer.Close();
     }
   }
 }

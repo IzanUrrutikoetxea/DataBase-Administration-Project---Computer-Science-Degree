@@ -47,5 +47,36 @@ namespace DbManager.Security
       if (PrivilegesOn[table].Contains(privilege)) return true;
       return false;
     }
+    public List<string> PrivilegesToString()
+    {
+      var result = new List<string>();
+      var tablesToString = "";
+      var privilegesToString = "";
+
+      foreach (var value in PrivilegesOn)
+      {
+        tablesToString += value.Key + ",";
+
+        foreach (var privilege in value.Value)
+        {
+          privilegesToString += privilege.ToString() + ",";
+        }
+
+        if (privilegesToString.EndsWith(","))
+          privilegesToString = privilegesToString.Substring(0, privilegesToString.Length - 1);
+
+        privilegesToString += ";";
+      }
+
+      if (tablesToString.EndsWith(","))
+        tablesToString = tablesToString.Substring(0, tablesToString.Length - 1);
+
+      if (privilegesToString.EndsWith(";"))
+        privilegesToString = privilegesToString.Substring(0, privilegesToString.Length - 1);
+
+      result.Add(tablesToString);
+      result.Add(privilegesToString);
+      return result;
+    }
   }
 }
