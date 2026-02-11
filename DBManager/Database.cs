@@ -30,6 +30,10 @@ namespace DbManager
       //DEADLINE 1.B: Initalize the member variables
       //ASK TO THE TEACHER HOW IS THIS SUPOSSED TO WORK
       SecurityManager = new Manager(m_username);
+      var profile = new Profile();
+      var user = new User(adminUsername, adminPassword);
+      profile.Users.Add(user);
+      SecurityManager.AddProfile(profile);
     }
 
     public bool AddTable(Table table)
