@@ -20,14 +20,13 @@ namespace DbManager
       //TODO DEADLINE 5: Run the query and return the appropriate message
       //UsersProfileIsNotGrantedRequiredPrivilege, CreateSecurityProfileSuccess
 
-      //ASK TEACHER HOW CAN I CHECK HERE IF UsersProfileIsNotGrantedRequiredPrivilege WHEN I ONLY HAVE THE DATABASE AND NOT THE TABLE
-      //if (profile.IsGrantedPrivilege(table?, Security.Privilege.Insert))
-      //{
-      //  var profile = new Profile();
-      //  profile.Name = profileName;
-      //  database.SecurityManager.AddProfile(profile);
-      //  return Constants.CreateSecurityProfileSuccess;
-      //}
+      if (database.SecurityManager.IsUserAdmin())
+      {
+        var profile = new DbManager.Security.Profile();
+        profile.Name = ProfileName;
+        database.SecurityManager.AddProfile(profile);
+        return Constants.CreateSecurityProfileSuccess;
+      }
       return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
     }
   }

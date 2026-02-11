@@ -21,6 +21,11 @@ namespace DbManager
     public Manager SecurityManager { get; private set; }
 
     //This constructor should only be used from Load (without needing to set a password for the user). It cannot be used from any other class
+    private Database(string adminUsername)
+    {
+      m_username = adminUsername;
+      SecurityManager = new Manager(m_username);
+    }
     private Database()
     {
     }
@@ -28,13 +33,12 @@ namespace DbManager
     public Database(string adminUsername, string adminPassword)
     {
       //DEADLINE 1.B: Initalize the member variables
-      //ASK TO THE TEACHER HOW IS THIS SUPOSSED TO WORK
       m_username = adminUsername;
       SecurityManager = new Manager(m_username);
-      //var profile = new Profile();
-      //var user = new User(adminUsername, adminPassword);
-      //profile.Users.Add(user);
-      //SecurityManager.AddProfile(profile);
+      var profile = new Profile();
+      var user = new User(adminUsername, adminPassword);
+      profile.Users.Add(user);
+      SecurityManager.AddProfile(profile);
     }
 
     public bool AddTable(Table table)
@@ -318,6 +322,14 @@ namespace DbManager
     public static Database CreateTestDatabase()
     {
     Database database = new Database(AdminUsername, AdminPassword);
+
+    database.Tables.Add(Table.CreateTestTable());
+
+    return database;
+    }
+    public static Database CreateOtherTestDatabase()
+    {
+    Database database = new Database(AdminUsername);
 
     database.Tables.Add(Table.CreateTestTable());
 

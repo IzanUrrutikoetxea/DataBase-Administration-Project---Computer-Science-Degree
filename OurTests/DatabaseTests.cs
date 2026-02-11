@@ -681,7 +681,7 @@ namespace OurTests
         DbManager.Security.Privilege.Update
       });
 
-      var database = Database.CreateTestDatabase();
+      var database = Database.CreateOtherTestDatabase();
       database.SecurityManager.AddProfile(profile);
       var fileName = "TestTable.txt";
 
@@ -727,7 +727,7 @@ namespace OurTests
         DbManager.Security.Privilege.Update
       });
 
-      var database = Database.CreateTestDatabase();
+      var database = Database.CreateOtherTestDatabase();
       database.SecurityManager.AddProfile(profile);
       var fileName = "test_db_load.txt";
 

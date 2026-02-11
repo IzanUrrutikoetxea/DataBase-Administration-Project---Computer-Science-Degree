@@ -54,7 +54,6 @@ namespace DbManager.Network
           }
         }
 
-        //ASK TEACHER WHY IS A TASK DELAY IN HERE??
         Task.Delay(2000).Wait();
 
         socket.Close();

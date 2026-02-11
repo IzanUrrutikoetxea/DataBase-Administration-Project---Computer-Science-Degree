@@ -30,13 +30,13 @@ namespace DbManager
       if (profile != null)
       {
         //ASK TEACHER HOW CAN I CHECK HERE IF UsersProfileIsNotGrantedRequiredPrivilege WHEN I ONLY HAVE THE DATABASE AND NOT THE TABLE
-        //if (profile.IsGrantedPrivilege(table?, Security.Privilege.Insert))
-        //{
-        //  var user = new User (Username, Password);
-        //  profile.Users.Add(user);
-        //  database.SecurityManager.AddProfile(profileName);
-        //  return Constants.AddUserSuccess;
-        //}
+        if (database.SecurityManager.IsUserAdmin())
+        {
+          var user = new User(Username, Password);
+          profile.Users.Add(user);
+          database.SecurityManager.AddProfile(profile);
+          return Constants.AddUserSuccess;
+        }
         return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
       }
       return Constants.SecurityProfileDoesNotExistError;
