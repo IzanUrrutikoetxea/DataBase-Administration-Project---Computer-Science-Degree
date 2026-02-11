@@ -203,6 +203,7 @@ namespace DbManager
         foreach (var table in Tables)
         {
           writer.WriteLine(table.Name);
+          writer.WriteLine(table.ColumnTypesToString());
           writer.WriteLine(table.ToString());
         }
         writer.Close();
@@ -228,6 +229,16 @@ namespace DbManager
       {
         string name = line;
         line = reader.ReadLine();
+        var types = line.Split(',');
+        var columnTypes = new List<DbManager.ColumnDefinition.DataType>();
+        foreach (var column in types)
+        {
+          if (column == "String") columnTypes.Add(DbManager.ColumnDefinition.DataType.String);
+          else if (column == "Double") columnTypes.Add(DbManager.ColumnDefinition.DataType.Double);
+          else if (column == "Int") columnTypes.Add(DbManager.ColumnDefinition.DataType.Int);
+        }
+
+        line = reader.ReadLine();
         int startCols = line.IndexOf('[');
         int endCols = line.IndexOf(']');
 
@@ -240,10 +251,9 @@ namespace DbManager
 
         var columnDefinitions = new List<ColumnDefinition>();
 
-        foreach (var column in columnNames)
+        for (int i=0; i<columnNames.Count; i++)
         {
-          //ASK TO THE TEACHER HOW ARE WE SUPOSED TO SAVE THE COLUMNDEFINITION TYPE - SAVE = NEW TO STRING VERSION OR CHANGE TOSTRING()
-          columnDefinitions.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, column));
+          columnDefinitions.Add(new ColumnDefinition(columnTypes[i], columnNames[i]));
         }
 
         var table = new Table(name, columnDefinitions);
@@ -266,6 +276,7 @@ namespace DbManager
           table.AddRow(row);
         }
         database.AddTable(table);
+        line = reader.ReadLine();
       }
       return database;
     }

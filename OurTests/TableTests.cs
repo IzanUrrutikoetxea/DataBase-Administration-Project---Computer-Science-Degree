@@ -1172,5 +1172,20 @@ namespace OurTests
       Assert.Equal(expectedTable, table);
     }
     #endregion
+
+    #region ColumnTypesToString Tests
+    [Fact]
+    public void Table_ColumnTypesToString_ShouldFollowTheCorrectStructure()
+    {
+      //Arrange
+      var table = DbManager.Table.CreateTestTable();
+
+      //Act
+      var result = table.ColumnTypesToString();
+
+      //Assert
+      Assert.Equal("String,Double,Int", result);
+    }
+    #endregion
   }
 }

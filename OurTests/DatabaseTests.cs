@@ -637,5 +637,79 @@ namespace OurTests
       Assert.Equal(database.TableByName("TestTable").ToString(), table.ToString());
     }
     #endregion
+
+    #region Save Tests
+    [Fact]
+    public void Database_Save_ShouldCreateAFileWithDatabaseName()
+    {
+      //Arrange
+      var database = Database.CreateTestDatabase();
+      var fileName = "TestTable.txt";
+
+      if (File.Exists(fileName)) File.Delete(fileName);
+
+      //Act
+      var result = database.Save(fileName);
+
+      //Assert
+      Assert.True(result);
+      Assert.True(File.Exists(fileName));
+    }
+    [Fact]
+    public void Database_Save_ShouldCorrectlySaveAllData()
+    {
+      //Arrange
+      var database = Database.CreateTestDatabase();
+      var fileName = "TestTable.txt";
+
+      if (File.Exists(fileName)) File.Delete(fileName);
+
+      //Act
+      database.Save(fileName);
+      var lines = File.ReadAllLines(fileName);
+
+      //Assert
+      Assert.NotEmpty(lines);
+      Assert.Equal("TestTable", lines[0]);
+      Assert.Equal("String,Double,Int", lines[1]);
+      Assert.Contains("['Name','Height','Age']", lines[2]);
+      Assert.Contains("Rodolfo", lines[2]);
+      Assert.Contains("Maider", lines[2]);
+      Assert.Contains("Pepe", lines[2]);
+    }
+    #endregion
+
+    #region Load Tests
+    [Fact]
+    public void Database_Load_ShoulLoadCorrectlyAllData()
+    {
+      //Arrange
+      var database = Database.CreateTestDatabase();
+      var fileName = "test_db_load.txt";
+
+      if (File.Exists(fileName)) File.Delete(fileName);
+
+      database.Save(fileName);
+
+      //Act
+      var resultDatabase = Database.Load(fileName, Database.AdminUsername, Database.AdminPassword);
+
+      //Assert
+      Assert.NotNull(resultDatabase);
+
+      var table = resultDatabase.TableByName(Table.TestTableName);
+      Assert.NotNull(table);
+
+      Assert.Equal(3, table.NumRows());
+      Assert.Equal(3, table.NumColumns());
+
+      Assert.Equal("Rodolfo", table.GetRow(0).Values[0]);
+      Assert.Equal("1.62", table.GetRow(0).Values[1]);
+      Assert.Equal("25", table.GetRow(0).Values[2]);
+
+      Assert.Equal("Maider", table.GetRow(1).Values[0]);
+      Assert.Equal("Pepe", table.GetRow(2).Values[0]);
+    }
+    #endregion
   }
 }
